@@ -27,6 +27,8 @@ dependencies:
   url_launcher_web: ^0.1.0
   mustache_template: ^1.0.0+1
   scrollable_positioned_list: ^0.1.9
+  fluttericon: ^1.0.7
+  intl: ^0.16.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -57,6 +59,7 @@ flutter:
   assets:
     - assets/text_template/
     - assets/img/
+    - assets/experiences.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
