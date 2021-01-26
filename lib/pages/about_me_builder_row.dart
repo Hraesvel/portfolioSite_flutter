@@ -9,7 +9,7 @@ class AboutMeSkillSet extends StatelessWidget {
 
   const AboutMeSkillSet(
       {Key key,
-      this.skill,
+      @required this.skill,
       this.rows: 2,
       this.depth: 4,
       this.start: 1,
@@ -18,16 +18,32 @@ class AboutMeSkillSet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> c1 = [];
+    int tally = 1;
+
+    for (int i = 0; i < rows; i++) {
+      List<Widget> s = [];
+
+      for (int j = tally; j < depth + tally; j++) {
+        try {
+          s.add(ListItemSkill(
+            leading: j.toString().padLeft(2, "0"),
+            title: skill[j - 1],
+          ));
+        } catch (e) {
+          break;
+        }
+      }
+      tally += depth;
+      c1.add(Column(
+        children: s,
+      ));
+    }
+
     return Row(
-      children: [
-        Column(
-          children: [
-            ListItemSkill(),
-          ],
-        ),
-        Column(children: [ListItemSkill()]),
-      ],
-    );
+        // crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: c1);
   }
 }
 
@@ -40,16 +56,21 @@ class ListItemSkill extends StatelessWidget {
       {Key key,
       this.leading: "🤦‍",
       this.title: "unknown",
-      this.minLeadingWidth: 5})
+      this.minLeadingWidth: 12})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 150,
+      height: 30,
       child: ListTile(
         minLeadingWidth: minLeadingWidth,
-        leading: Text(leading),
+        contentPadding: EdgeInsets.all(0),
+        leading: Text(
+          "$leading.",
+          style: TextStyle(color: Theme.of(context).accentColor),
+        ),
         title: Text(title),
       ),
     );

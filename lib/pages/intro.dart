@@ -1,21 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Introduction extends StatelessWidget {
+class Introduction extends StatelessWidget  {
   final Map info;
 
-  Introduction({Key key, this.info}) : super(key: key);
+  Introduction({Key key, @required this.info}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 600,
+      height: 700,
+      // decoration: BoxDecoration(color: Colors.purple.withOpacity(.2)),
       child: Padding(
-        padding: const EdgeInsets.only(left: 128, right: 128),
+        padding: const EdgeInsets.only(left: 128, right: 128, top: 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 120),
+            // SizedBox(height: 120),
             Text(
               "Hello, I'm Martin Smith",
               textAlign: TextAlign.start,
@@ -37,12 +40,10 @@ class Introduction extends StatelessWidget {
             ),
             FlatButton(
                 onPressed: () {
-                  Uri emailMe =   Uri(
+                  Uri emailMe = Uri(
                       scheme: "mailto",
                       path: "mcodesmith@gmail.com",
-                      queryParameters: {
-                        'subject' : 'Greetings'
-                      });
+                      queryParameters: {'subject': 'Greetings'});
 
                   launch(emailMe.toString());
                 },
@@ -56,11 +57,37 @@ class Introduction extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Colors.transparent,
                       border: Border.all(
-                          width: 1, color: Theme.of(context).accentColor.withOpacity(0.40))),
-                ))
+                          width: 1,
+                          color:
+                              Theme.of(context).accentColor.withOpacity(0.40))),
+                )),
+            Center(
+                child: SizedBox(
+                    width: 180,
+                    child: Divider(
+                      color: Theme.of(context).accentColor.withOpacity(.50),
+                      thickness: 2,
+                      height: 180,
+                    )))
           ],
         ),
       ),
     );
   }
+
+  Widget fromJson(String json) {
+    var map = JsonDecoder().convert(json);
+    return Introduction(info: map['info']);
+  }
+
+  String intoJson() {
+
+    var map = {
+      'type' : 'Introduction',
+      'info': this.info
+    };
+
+    return JsonEncoder().convert(map);
+  }
 }
+

@@ -1,6 +1,13 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'pages/about_me.dart';
-import 'pages/intro.dart';
+import 'package:portfolio_site/side_bar.dart';
+import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/link.dart';
+import 'pages/pages.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 void main() {
@@ -12,11 +19,37 @@ void main() {
         brightness: Brightness.dark,
         primaryColor: Color(0xff0a192f),
         accentColor: Color(0xffeb3575),
+        primaryColorLight: Color(0xffB7BEDB),
         textTheme: TextTheme(
-            headline1: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold),
-            headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-            bodyText1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+            headline1: TextStyle(
+                fontSize: 60.0,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Roboto'),
+            headline2: TextStyle(
+                fontSize: 38.0,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto'),
+            headline3: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto'),
+            headline4: TextStyle(
+                color: Color(0xffB7BEDB).withOpacity(.55),
+                fontSize: 18.0,
+                fontWeight: FontWeight.w300,
+                fontFamily: 'Roboto'),
+            bodyText1: TextStyle(
+                fontSize: 18.0,
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w400,
+                color: Color(0xffB7BEDB)),
+            bodyText2: TextStyle(
+                fontSize: 16.0,
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w400,
+                color: Color(0xffB7BEDB)),
             button: TextStyle(
+                fontFamily: 'Roboto',
                 fontSize: 14.0,
                 color: Color(0xffeb3575),
                 fontWeight: FontWeight.w100)),
@@ -77,9 +110,9 @@ class Home extends StatelessWidget {
                 fontWeight: FontWeight.w100)),
       ),
       FlatButton(
-        onPressed: () {
-          debugPrint("Placeholder Resume");
-        },
+        onPressed: () => launch(
+            Uri.parse("assets/assets/static/Martin_Backend_Engineer.pdf")
+                .toString()),
         child: Text("Resume",
             style: TextStyle(
                 fontSize: 14.0,
@@ -96,14 +129,8 @@ class Home extends StatelessWidget {
         info: info,
         templatePath: "assets/text_template/about_me.mustache",
       ),
-      Container(
-        height: 600,
-        decoration: BoxDecoration(color: Colors.pink),
-      ),
-      Container(
-        height: 600,
-        decoration: BoxDecoration(color: Colors.green),
-      ),
+      Experiences(),
+      Projects(),
       Container(
         height: 600,
         decoration: BoxDecoration(color: Colors.purple),
@@ -126,8 +153,8 @@ class Home extends StatelessWidget {
     var list = ScrollablePositionedList.builder(
       itemCount: pages.length,
       physics: BouncingScrollPhysics(),
-      itemBuilder: (context, index) => Center(child: SizedBox(width: 1024,
-          child: pages[index])),
+      itemBuilder: (context, index) =>
+          Center(child: SizedBox(width: 1024, child: pages[index])),
       itemScrollController: itemScrollController,
       itemPositionsListener: itemPositionsListener,
     );
@@ -136,7 +163,12 @@ class Home extends StatelessWidget {
       appBar: CustomAppBar(actions: actionButtons),
       body: Container(
         color: Color(0xff0a192f),
-        child: list,
+        child: Stack(
+          children: [
+            list,
+            SideBar(),
+          ],
+        ),
       ),
     );
   }
@@ -152,10 +184,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Container(
-      // width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       child: Padding(
-        padding: EdgeInsets.only(left: 128, right: MediaQuery.of(context).size.width * 0.35, top: 25, bottom: 25),
+        padding: EdgeInsets.only(
+            left: 128,
+            right: MediaQuery.of(context).size.width * 0.35,
+            top: 25,
+            bottom: 25),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: actions,
@@ -165,4 +200,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   CustomAppBar({@required this.actions}) : preferredSize = Size.fromHeight(128);
+}
+
+class Temp {
+  var name;
+  var age;
+
+  Temp({Key key, this.name: "woof", this.age: 30});
 }

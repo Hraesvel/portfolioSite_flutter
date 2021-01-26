@@ -1,0 +1,28 @@
+{
+  "frontend" : [
+    {
+      "name" : "Personal Website",
+      "link": "https://github.com/Ostoyae/ostoyae.github.io",
+      "description": "I build a new personal webpage",
+      "tech" : [
+        "Flutter 🦋",
+        "Dart 🎯"
+      ],
+      "image" : "personalWeb_thumb.png"
+    }
+  ],
+  "backend" : [
+    {
+      "name" : "IdeaDog (server)",
+      "link": "https://github.com/Ostoyae/ideaDog_server",
+      "description": "IdeaDog is a social web application for sharing ideas.",
+
+      "tech" : [
+        "Rust 🦀",
+        "Actix",
+        "ArangoDB 🥑"
+      ],
+      "image": "ideaDog_thumb.png"
+    }
+  ]
+}
