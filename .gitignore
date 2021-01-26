@@ -47,5 +47,5 @@ app.*.map.json
 
 
 # dirctories to not track
-iso/
-android/
+/android/
+/ios/
