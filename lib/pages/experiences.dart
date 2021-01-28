@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utilities/common.dart';
@@ -19,8 +18,8 @@ class Experiences extends StatefulWidget {
 }
 
 class _ExperiencesState extends State<Experiences> {
-  ExpData exp = ExpData(0, []);
-  ExperienceWidget headline = ExperienceWidget(
+  ExpData expData = ExpData(0, []);
+  ExperienceWidget currentExp = ExperienceWidget(
     headline: "PlaceHolder",
     start: 0,
     theme: ThemeData(),
@@ -33,9 +32,9 @@ class _ExperiencesState extends State<Experiences> {
     super.initState();
     parseExp('assets/experiences.json').then((value) => {
           setState(() {
-            exp = value;
+            expData = value;
             try {
-              headline = ExperienceWidget.fromData(exp.data[0], context);
+              currentExp = ExperienceWidget.fromData(expData.data[0], context);
             } catch (e) {
               debugPrint(e.toString());
             }
@@ -76,16 +75,16 @@ class _ExperiencesState extends State<Experiences> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: List<Widget>.generate(
-                  exp.count,
+                  expData.count,
                   (index) => ExpFlatButton(
                     idx: index,
-                    experience: this.exp.data[index],
+                    experience: this.expData.data[index],
                     parent: this,
                   ),
                 ),
               ),
             ),
-            headline,
+            currentExp,
             FlatButton(
                 //Todo: linked to resume
                 onPressed: () => launch(Uri.parse(
@@ -147,7 +146,7 @@ class ExpFlatButton extends StatelessWidget {
             parent.setState(() {
               if (this.idx == parent._displayedIdx)
                 return;
-              parent.headline = ExperienceWidget.fromData(experience, context);
+              parent.currentExp = ExperienceWidget.fromData(experience, context);
               parent._displayedIdx = this.idx;
             });
           },

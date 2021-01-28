@@ -1,12 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio_site/pages/about_me_builder_row.dart';
 import 'package:mustache_template/mustache_template.dart';
 
-import 'dart:async' show Future;
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:portfolio_site/utilities/common.dart';
 
 class AboutMeBuilder extends StatelessWidget {

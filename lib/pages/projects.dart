@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'dart:async';
-import 'package:url_launcher/url_launcher.dart';
 
 class Projects extends StatefulWidget {
   @override
