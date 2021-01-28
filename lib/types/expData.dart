@@ -9,7 +9,7 @@ class ExpData {
   ExpData(this.count, this.data);
 
   int count = 0;
-  List<Exp> data = [];
+  List<Experience> data = [];
 
   factory ExpData.fromJson(Map<String, dynamic> json) => _$ExpDataFromJson(json);
 
