@@ -3,9 +3,12 @@
 
 my software engineer website
 
+# Build and Run
 
+Flutter is required to preview/build this project. install instructions can be found at Url below.
+https://flutter.dev/docs/get-started/install
 
-Enable web development. At the command line, perform the following commands.
+**Required:** Enable web development. At the command line, perform the following commands.
 ```
 flutter channel beta
 flutter upgrade
