@@ -1,16 +1,16 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:convert';
 import '../utilities/common.dart';
 import 'package:flutter/foundation.dart';
 
 import '../types/types.dart';
+import 'package:portfolio_site/access.dart';
 
 class Experiences extends StatefulWidget {
   @override
@@ -18,12 +18,14 @@ class Experiences extends StatefulWidget {
 }
 
 class _ExperiencesState extends State<Experiences> {
-  ExpData exp;
+  ExpData exp = ExpData(0, []);
   ExperienceWidget headline = ExperienceWidget(
-    headline: "Woof",
+    headline: "PlaceHolder",
     start: 0,
     theme: ThemeData(),
   );
+
+  int _displayExp = 0;
 
   @override
   void initState() {
@@ -32,14 +34,7 @@ class _ExperiencesState extends State<Experiences> {
           setState(() {
             exp = value;
             try {
-              var first = exp.data[0];
-              headline = ExperienceWidget(
-                headline: first.headline,
-                start: first.start,
-                description: first.description,
-                achievements: first.achievements,
-                theme: Theme.of(context),
-              );
+              headline = ExperienceWidget.fromData(exp.data[0], context);
             } catch (e) {
               debugPrint(e.toString());
             }
@@ -80,12 +75,12 @@ class _ExperiencesState extends State<Experiences> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: List<Widget>.generate(
-                  15,
-                  (index) => FlatButton(
-                      onPressed: () {
-                        debugPrint("woof");
-                      },
-                      child: Text("Crowd")),
+                  exp.count,
+                  (index) => ExpFlatButton(
+                    idx: index,
+                    experience: this.exp.data[index],
+                    parent: this,
+                  ),
                 ),
               ),
             ),
@@ -117,10 +112,52 @@ class _ExperiencesState extends State<Experiences> {
 
   Future<ExpData> parseExp(String path) async {
     Map<String, dynamic> out;
-    String json = await CommonUtility.loadStringAsset(path);
+    String json = "";
+    http.Response res =
+        await CommonUtility.fetchFromWeb("$S3ACCESS/experiences.json");
+    json = res.statusCode == 200
+        ? res.body
+        : await CommonUtility.loadStringAsset(path);
     out = JsonDecoder().convert(json);
     ExpData exp = ExpData.fromJson(out);
     return exp;
+  }
+}
+
+class ExpFlatButton extends StatelessWidget {
+  final int idx;
+  final Experience experience;
+  final _ExperiencesState parent;
+
+  ExpFlatButton({
+    Key key,
+    @required this.idx,
+    @required this.experience,
+    this.parent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 175,
+      child: FlatButton(
+          /**/
+          onPressed: () {
+            parent.setState(() {
+              parent.headline = ExperienceWidget.fromData(experience, context);
+              parent._displayExp = this.idx;
+            });
+          },
+          child: Text(
+            experience.name,
+            style: this.idx == parent._displayExp
+                ? Theme.of(context).textTheme.button.copyWith(
+                    fontSize: 20,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w400)
+                : Theme.of(context).textTheme.button,
+          )),
+    );
   }
 }
 
@@ -195,6 +232,17 @@ class ExperienceWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  static Widget fromData(Experience data, BuildContext context) {
+    return ExperienceWidget(
+        headline: data.headline,
+        start: data.start,
+        description: data.description,
+        achievements: data.achievements,
+        isCurrent: data.isCurrent,
+        end: data.end,
+        theme: Theme.of(context));
   }
 
   String convertTime(int milliseconds, {format: "MMMM yyyy"}) {
