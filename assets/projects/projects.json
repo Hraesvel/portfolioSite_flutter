@@ -8,7 +8,8 @@
         "Flutter 🦋",
         "Dart 🎯"
       ],
-      "image" : "personalWeb_thumb.png"
+      "image" : "personalWeb_thumb.png",
+      "bucket":
     }
   ],
   "backend" : [
