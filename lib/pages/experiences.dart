@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class _ExperiencesState extends State<Experiences> {
     theme: ThemeData(),
   );
 
-  int _displayExp = 0;
+  int _displayedIdx = 0;
 
   @override
   void initState() {
@@ -144,19 +145,24 @@ class ExpFlatButton extends StatelessWidget {
           /**/
           onPressed: () {
             parent.setState(() {
+              if (this.idx == parent._displayedIdx)
+                return;
               parent.headline = ExperienceWidget.fromData(experience, context);
-              parent._displayExp = this.idx;
+              parent._displayedIdx = this.idx;
             });
           },
-          child: Text(
-            experience.name,
-            style: this.idx == parent._displayExp
-                ? Theme.of(context).textTheme.button.copyWith(
-                    fontSize: 20,
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.w400)
-                : Theme.of(context).textTheme.button,
-          )),
+          child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                experience.name,
+                style: this.idx == parent._displayedIdx
+                    ? Theme.of(context).textTheme.button.copyWith(
+                        fontSize: 20,
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.w400,
+                )
+                    : Theme.of(context).textTheme.button,
+              ))),
     );
   }
 }
