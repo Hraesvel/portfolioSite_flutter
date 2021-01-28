@@ -16,6 +16,15 @@ flutter config --enable-web
 
 ```
 
+
+Clone:
+```
+git clone https://github.com/Ostoyae/portfolioSite_flutter.git
+cd ./portfolioSite_flutter
+```
+
+Then use one of the commands below.
+
 to preview:
 ```
 flutter run -d chrome
