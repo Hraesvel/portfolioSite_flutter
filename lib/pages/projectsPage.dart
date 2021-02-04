@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio_site/access.dart';
-import 'package:portfolio_site/types/project.dart';
-import 'package:portfolio_site/types/projectData.dart';
+import 'package:portfolio_site/types/types.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:transparent_image/transparent_image.dart';
 

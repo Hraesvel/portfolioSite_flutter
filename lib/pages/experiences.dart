@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../utilities/common.dart';
 import 'package:flutter/foundation.dart';
 
-import '../types/types.dart';
+import 'package:portfolio_site/types/types.dart';
 import 'package:portfolio_site/access.dart';
 
 class Experiences extends StatefulWidget {
