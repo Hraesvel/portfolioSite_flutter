@@ -16,7 +16,7 @@ class Experience {
   String description;
   List<String> achievements;
 
-  factory Experience.fromJson(Map<String, dynamic> json) => _$ExpFromJson(json);
+  factory Experience.fromJson(Map<String, dynamic> json) => _$ExperienceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ExpToJson(this);
+  Map<String, dynamic> toJson() => _$ExperienceToJson(this);
 }

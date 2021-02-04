@@ -7,13 +7,18 @@ class Project {
       this.description,
       this.link,
       this.image,
-      this.tech);
+      this.tech,
+      this.priority,
+      this.bucket);
 
+  int priority = 0;
   String name;
   String description;
   String link;
   List<String> tech = [];
   String image;
+  String thumb;
+  String bucket;
 
 
   factory Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);

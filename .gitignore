@@ -50,3 +50,4 @@ app.*.map.json
 # dirctories to not track
 /android/
 /ios/
+/.projectsAg/token.pickle

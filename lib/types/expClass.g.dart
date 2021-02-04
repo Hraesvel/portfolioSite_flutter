@@ -6,7 +6,7 @@ part of 'expClass.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Experience _$ExpFromJson(Map<String, dynamic> json) {
+Experience _$ExperienceFromJson(Map<String, dynamic> json) {
   return Experience(
     json['name'] as String,
     json['start'] as int,
@@ -19,7 +19,8 @@ Experience _$ExpFromJson(Map<String, dynamic> json) {
       (json['achievements'] as List)?.map((e) => e as String)?.toList();
 }
 
-Map<String, dynamic> _$ExpToJson(Experience instance) => <String, dynamic>{
+Map<String, dynamic> _$ExperienceToJson(Experience instance) =>
+    <String, dynamic>{
       'name': instance.name,
       'isCurrent': instance.isCurrent,
       'start': instance.start,

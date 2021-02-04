@@ -110,11 +110,12 @@ class _ExperiencesState extends State<Experiences> {
     );
   }
 
-  Future<ExpData> parseExp(String path) async {
+  Future<ExpData>  parseExp(String path) async {
     Map<String, dynamic> out;
     String json = "";
     http.Response res =
-        await CommonUtility.fetchFromWeb("$S3ACCESS/experiences.json");
+        // await CommonUtility.fetchFromWeb("$S3ACCESS/experiences.json");
+        await CommonUtility.fetchFromS3(file: "experiences.json");
     json = res.statusCode == 200
         ? res.body
         : await CommonUtility.loadStringAsset(path);

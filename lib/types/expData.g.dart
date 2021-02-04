@@ -10,7 +10,8 @@ ExpData _$ExpDataFromJson(Map<String, dynamic> json) {
   return ExpData(
     json['count'] as int,
     (json['data'] as List)
-        ?.map((e) => e == null ? null : Experience.fromJson(e as Map<String, dynamic>))
+        ?.map((e) =>
+            e == null ? null : Experience.fromJson(e as Map<String, dynamic>))
         ?.toList(),
   );
 }
