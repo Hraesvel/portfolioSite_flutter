@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio_site/access.dart';
+import 'package:portfolio_site/pages/about_me_builder_row.dart';
 import 'package:portfolio_site/types/types.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -39,7 +40,7 @@ class _ProjectsState extends State<Projects> {
   Widget build(BuildContext context) {
     // constructFrontend();
     return Container(
-      height: 1400,
+      // height: 1800,
       child: Padding(
         padding: const EdgeInsets.only(left: 128, right: 128),
         child: Column(
@@ -78,7 +79,9 @@ class _ProjectsState extends State<Projects> {
     var res = await CommonUtility.fetchFromS3(
         bucket: "projects", file: "projects.json");
     if (res.statusCode == 200) {
-      Map<String, dynamic> out = JsonDecoder().convert(res.body);
+      var bytes = res.body.codeUnits;
+      // debugPrint(utf8.decode(bytes));
+      Map<String, dynamic> out = JsonDecoder().convert(utf8.decode(bytes));
       projects = ProjectData.fromJson(out);
     }
     return projects;
@@ -131,11 +134,17 @@ class FrontendWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var frontendProjects = [
+    List<Widget> textBody = [Text(this.project.description)];
+
+    for (var t in this.project.tech){
+      textBody.add(ListItemSkill(title: t,));
+    }
+
+    var children = [
       Container(
         constraints: BoxConstraints(
-            minWidth: 128,
-            minHeight: 64,
+            // minWidth: 128,
+            // minHeight: 128,
             maxHeight: 321 * 0.7,
             maxWidth: 516 * 0.7),
         decoration: BoxDecoration(
@@ -160,14 +169,17 @@ class FrontendWidget extends StatelessWidget {
         ),
         height: 312 * 0.7,
         decoration: BoxDecoration(color: Colors.white10),
-        child: Text(this.project.description),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: textBody
+        ),
       ),
 
     ];
     return Container(
       child: MediaQuery.of(context).size.width <= 980
-          ? Column(children: frontendProjects)
-          : Row(children: frontendProjects)
+          ? Column(children: children)
+          : Row(children: children)
       // crossAxisAlignment: WrapCrossAlignment.start,
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       ,
