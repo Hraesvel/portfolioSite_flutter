@@ -9,6 +9,10 @@ class SideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _constructSideBar(context);
+  }
+
+  Widget _constructSideBar(BuildContext context) {
     return Positioned(
         left: MediaQuery.of(context).size.width - 90,
         top: MediaQuery.of(context).size.height / 2 - 200,
