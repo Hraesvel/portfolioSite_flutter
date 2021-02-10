@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:async/async.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
@@ -18,7 +19,8 @@ class Experiences extends StatefulWidget {
 }
 
 class _ExperiencesState extends State<Experiences> {
-  ExpData expData = ExpData(0, []);
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+  ExpData expData;
   ExperienceWidget currentExp = ExperienceWidget(
     headline: "PlaceHolder",
     start: 0,
@@ -30,21 +32,6 @@ class _ExperiencesState extends State<Experiences> {
   @override
   void initState() {
     super.initState();
-    parseExp('assets/experiences.json').then((value) => {
-          setState(() {
-            expData = value;
-            try {
-              currentExp = ExperienceWidget.fromData(expData.data[0], context);
-            } catch (e) {
-              debugPrint(e.toString());
-            }
-          })
-        });
-  }
-
-  @override
-  void setState(VoidCallback fn) {
-    if (this.mounted) super.setState(fn);
   }
 
   @override
@@ -58,59 +45,83 @@ class _ExperiencesState extends State<Experiences> {
       height: 700,
       // decoration: BoxDecoration(color: Colors.purple),
       child: Padding(
-        padding: const EdgeInsets.only(left: 128, right: 128),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Experiences",
-              style: Theme.of(context).textTheme.headline2,
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            SizedBox(
-              width: 550,
-              height: 54,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: List<Widget>.generate(
-                  expData.count,
-                  (index) => ExpFlatButton(
-                    idx: index,
-                    experience: this.expData.data[index],
-                    parent: this,
+          padding: const EdgeInsets.only(left: 128, right: 128),
+          child: FutureBuilder(
+            future: _constructExperience(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasError)
+                debugPrint(snapshot.error.toString());
+              if (!snapshot.hasData)
+                return Container(
+                  height: 500,
+                  child: SizedBox(
+                    // child: CircularProgressIndicator(),
+                    height: 60,
+                    width: 60,
                   ),
-                ),
-              ),
-            ),
-            currentExp,
-            FlatButton(
-                //Todo: linked to resume
-                onPressed: () => launch(Uri.parse(
-                        "assets/assets/static/Martin_Backend_Engineer.pdf")
-                    .toString()),
-                padding: EdgeInsets.all(0.0),
-                child: Container(
-                  height: 60,
-                  width: 128,
-                  alignment: Alignment.center,
-                  child:
-                      Text("Resume", style: Theme.of(context).textTheme.button),
-                  decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      border: Border.all(
-                          width: 1,
-                          color:
-                              Theme.of(context).accentColor.withOpacity(0.40))),
-                )),
-          ],
-        ),
-      ),
+                );
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Experiences",
+                    style: Theme.of(context).textTheme.headline2,
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Container(
+                    width: 550,
+                    height: 54,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: List<Widget>.generate(
+                        expData.count,
+                        (index) => ExpFlatButton(
+                          idx: index,
+                          experience: this.expData.data[index],
+                          parent: this,
+                        ),
+                      ),
+                    ),
+                  ),
+                  currentExp,
+                  FlatButton(
+                      onPressed: () => launch(Uri.parse(
+                              "assets/assets/static/Martin_Backend_Engineer.pdf")
+                          .toString()),
+                      padding: EdgeInsets.all(0.0),
+                      child: Container(
+                        height: 60,
+                        width: 128,
+                        alignment: Alignment.center,
+                        child: Text("Resume",
+                            style: Theme.of(context).textTheme.button),
+                        decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border.all(
+                                width: 1,
+                                color: Theme.of(context)
+                                    .accentColor
+                                    .withOpacity(0.40))),
+                      )),
+                ],
+              );
+            },
+          )),
     );
   }
 
-  Future<ExpData>  parseExp(String path) async {
+  Future<dynamic> _constructExperience() async {
+    return this._memoizer.runOnce(() async {
+      this.expData = await parseExp('assets/experiences.json');
+      currentExp = ExperienceWidget.fromData(expData.data[0], context);
+      return this.expData;
+    });
+  }
+
+  Future<ExpData> parseExp(String path) async {
     Map<String, dynamic> out;
     String json = "";
     http.Response res =
@@ -128,39 +139,39 @@ class _ExperiencesState extends State<Experiences> {
 class ExpFlatButton extends StatelessWidget {
   final int idx;
   final Experience experience;
-  final _ExperiencesState parent;
+  final _ExperiencesState _parent;
 
   ExpFlatButton({
     Key key,
     @required this.idx,
     @required this.experience,
-    this.parent,
-  });
+    parent,
+  }) : this._parent = parent;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 175,
       child: FlatButton(
-          /**/
           onPressed: () {
-            parent.setState(() {
-              if (this.idx == parent._displayedIdx)
-                return;
-              parent.currentExp = ExperienceWidget.fromData(experience, context);
-              parent._displayedIdx = this.idx;
+            // ignore: invalid_use_of_protected_member
+            _parent.setState(() {
+              if (this.idx == _parent._displayedIdx) return;
+              _parent.currentExp =
+                  ExperienceWidget.fromData(experience, context);
+              _parent._displayedIdx = this.idx;
             });
           },
           child: Align(
               alignment: Alignment.bottomCenter,
               child: Text(
                 experience.name,
-                style: this.idx == parent._displayedIdx
+                style: this.idx == _parent._displayedIdx
                     ? Theme.of(context).textTheme.button.copyWith(
-                        fontSize: 20,
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.w400,
-                )
+                          fontSize: 20,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w400,
+                        )
                     : Theme.of(context).textTheme.button,
               ))),
     );

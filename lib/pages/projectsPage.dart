@@ -7,6 +7,7 @@ import 'package:portfolio_site/pages/about_me_builder_row.dart';
 import 'package:portfolio_site/types/types.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Projects extends StatefulWidget {
   @override
@@ -14,26 +15,20 @@ class Projects extends StatefulWidget {
 }
 
 class _ProjectsState extends State<Projects> {
-  List<Project> frontend = [];
-  List<Project> backend = [];
+  ProjectData projects;
 
-  Column fp;
-  Column bp;
+  Widget fp;
+  Widget bp;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      CommonUtility.fetchFromS3(bucket: "projects", file: "projects.json")
-          .then((res) {
-        if (res.statusCode == 200) {
-          Map<String, dynamic> out = JsonDecoder().convert(res.body);
-          ProjectData projects = ProjectData.fromJson(out);
-          this.frontend = projects.frontend;
-          this.backend = projects.backend;
-        }
-      });
-    });
+  }
+
+  @override
+  void dispose() {
+    this.projects = null;
+    super.dispose();
   }
 
   @override
@@ -45,49 +40,90 @@ class _ProjectsState extends State<Projects> {
         padding: const EdgeInsets.only(left: 128, right: 128),
         child: Column(
           children: [
+            // Frontend Projects
             FutureBuilder(
               future: _getProjectData(),
               builder:
                   (BuildContext context, AsyncSnapshot<ProjectData> snapshot) {
                 if (snapshot.hasData) {
-                  constructFrontend();
+                  constructFrontend(snapshot.data);
                 } else {
-                  this.fp = Column(children: [
-                    SizedBox(
-                      child: CircularProgressIndicator(),
-                      width: 60,
-                      height: 60,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Text('Awaiting result...'),
-                    )
-                  ]);
+                  this.fp = Container(
+                    height: 500,
+                    child: Column(children: [
+                      SizedBox(
+                        child: CircularProgressIndicator(),
+                        width: 60,
+                        height: 60,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: Text('Awaiting result...'),
+                      )
+                    ]),
+                  );
                 }
                 return this.fp;
               },
-            )
+            ),
+            // Backend Projects
+            FutureBuilder(
+                future: _getProjectData(),
+                builder: (BuildContext context, AsyncSnapshot snapShot) {
+                  if (snapShot.hasData) {
+                    constructBackend(snapShot.data);
+                  } else {
+                    this.bp = Container(
+                      height: 500,
+                      child: Column(children: [
+                        SizedBox(
+                          child: CircularProgressIndicator(),
+                          width: 60,
+                          height: 60,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: Text('Awaiting result...'),
+                        )
+                      ]),
+                    );
+                  }
+                  return this.bp;
+                })
           ],
         ),
       ),
     );
   }
 
+  /// Send a request to an Amazon S3 bucket relation to projects
+  /// This method construct a `ProjectData` from the response and propagate
+  /// the 'projects' field
   Future<ProjectData> _getProjectData() async {
-    ProjectData projects;
+    if (this.projects != null) return this.projects;
 
     var res = await CommonUtility.fetchFromS3(
         bucket: "projects", file: "projects.json");
     if (res.statusCode == 200) {
-      var bytes = res.body.codeUnits;
-      // debugPrint(utf8.decode(bytes));
-      Map<String, dynamic> out = JsonDecoder().convert(utf8.decode(bytes));
-      projects = ProjectData.fromJson(out);
+      try {
+        // var bytes = res.body.codeUnits;
+        // Map<String, dynamic> out = JsonDecoder().convert(utf8.decode(bytes));
+        Map<String, dynamic> out = JsonDecoder().convert(res.body);
+        this.projects = ProjectData.fromJson(out);
+        // debugPrint(this.projects.frontend.toString());
+        this.projects.frontend.sort((a, b) => a.priority.compareTo(b.priority));
+        // debugPrint(this.projects.frontend.toString());
+
+        this.projects.backend.sort((a, b) => a.priority.compareTo(b.priority));
+      } catch (e) {
+        print("whoops");
+        debugPrint(e.toString());
+      }
     }
-    return projects;
+    return this.projects;
   }
 
-  void constructFrontend() async {
+  void constructFrontend(ProjectData projects) {
     List<Widget> content = [
       Padding(
         padding: const EdgeInsets.only(bottom: 50),
@@ -98,9 +134,12 @@ class _ProjectsState extends State<Projects> {
       ),
     ];
 
-    for (Project p in this.frontend) {
+    for (Project p in projects.frontend) {
       content.add(FrontendWidget(project: p));
-      content.add(SizedBox(width: 50, height: 50,));
+      content.add(SizedBox(
+        width: 50,
+        height: 50,
+      ));
     }
 
     this.fp = Column(
@@ -109,12 +148,45 @@ class _ProjectsState extends State<Projects> {
     );
   }
 
-  List<Widget> constructBackend() {
-    if (this.backend.isEmpty)
-      return [];
-    else
-      // do stuff
-      return [];
+  void constructBackend(ProjectData projects) {
+    List<Widget> children = [
+      Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: Text(
+          "Backend Projects",
+          style: Theme.of(context).textTheme.headline2,
+        ),
+      ),
+    ];
+
+    List<BackendWidget> prjList = [];
+
+    var size = Size(40, 25);
+
+    for (Project prj in projects.backend) {
+      prjList.add(BackendWidget(
+        prj,
+        size: size,
+      ));
+    }
+
+    if (prjList.isNotEmpty)
+      children.add(GridView(
+        shrinkWrap: true,
+        children: prjList,
+        addRepaintBoundaries: false,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 25.0,
+            mainAxisSpacing: 15.0,
+            childAspectRatio: (size.width / size.height)),
+      ));
+
+    debugPrint(children.toString());
+    this.bp = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
   }
 }
 
@@ -134,11 +206,30 @@ class FrontendWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> textBody = [Text(this.project.description)];
+    List<Widget> textBody = [
+      Text(
+        this.name,
+        style: Theme.of(context).textTheme.headline3,
+      ),
+      SizedBox(
+        height: 15,
+      ),
+      Text(this.project.description)
+    ];
 
-    for (var t in this.project.tech){
-      textBody.add(ListItemSkill(title: t,));
+    for (var tech in this.project.tech) {
+      textBody.add(ListItemSkill(
+        title: tech,
+      ));
     }
+
+    textBody.add(Spacer(
+      flex: 1,
+    ));
+    textBody.add(Text(
+      "Link",
+      style: Theme.of(context).textTheme.button,
+    ));
 
     var children = [
       Container(
@@ -149,8 +240,8 @@ class FrontendWidget extends StatelessWidget {
             maxWidth: 516 * 0.7),
         decoration: BoxDecoration(
             color: Color(0xff081F41),
-            border:
-                Border.all(width: 2.0, color: Colors.blueGrey.withOpacity(0.3) )),
+            border: Border.all(
+                width: 2.0, color: Colors.blueGrey.withOpacity(0.3))),
         child: AspectRatio(
             aspectRatio: 1.6,
             child: FadeInImage.memoryNetwork(
@@ -161,6 +252,7 @@ class FrontendWidget extends StatelessWidget {
             )),
       ),
       SizedBox(width: 35, height: 35),
+      // Spacer(flex: 1,),
       Container(
         constraints: BoxConstraints(
           minWidth: 200,
@@ -168,13 +260,10 @@ class FrontendWidget extends StatelessWidget {
           maxWidth: 516 * 0.65,
         ),
         height: 312 * 0.7,
-        decoration: BoxDecoration(color: Colors.white10),
+        // decoration: BoxDecoration(color: Colors.white10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: textBody
-        ),
+            crossAxisAlignment: CrossAxisAlignment.start, children: textBody),
       ),
-
     ];
     return Container(
       child: MediaQuery.of(context).size.width <= 980
@@ -183,6 +272,66 @@ class FrontendWidget extends StatelessWidget {
       // crossAxisAlignment: WrapCrossAlignment.start,
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       ,
+    );
+  }
+}
+
+class BackendWidget extends StatelessWidget {
+  final Project project;
+  final int priority;
+  final String name;
+
+  final Size size;
+
+  // final String? image;
+
+  BackendWidget(this.project, {Key key, this.size = const Size(25, 25)})
+      : this.priority = project.priority,
+        this.name = project.name;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = [
+      Text(
+        this.name,
+        style: Theme.of(context).textTheme.headline3,
+      ),
+      Spacer(
+        flex: 2,
+      ),
+      Text(
+        this.project.description,
+        style: Theme.of(context).textTheme.bodyText2,
+      ),
+      Spacer(
+        flex: 1,
+      ),
+      Text(
+        this.project.tech.toString(),
+        style: Theme.of(context).textTheme.bodyText2,
+      ),
+      Spacer(
+        flex: 5,
+      ),
+      FlatButton(
+          onPressed: () => launch(this.project.link),
+          child: Text(
+            "View on Github ->",
+            style: Theme.of(context).textTheme.button,
+          ))
+    ];
+
+    return Container(
+      height: 8,
+      width: 16,
+      decoration: BoxDecoration(color: Color(0xff102646)),
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
+        ),
+      ),
     );
   }
 }
