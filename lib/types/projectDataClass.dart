@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'project.dart';
+import 'projectClass.dart';
 
-part 'projectData.g.dart';
+part 'projectDataClass.g.dart';
 
 @JsonSerializable()
 class ProjectData {

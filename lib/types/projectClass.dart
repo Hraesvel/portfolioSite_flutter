@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
-part 'project.g.dart';
+part 'projectClass.g.dart';
 
 @JsonSerializable()
 class Project {
@@ -29,7 +29,10 @@ class Project {
 
   @JsonKey(name: 'tech')
   List<String> _tech = [];
+  @JsonKey(nullable: true)
   String image;
+
+  @JsonKey(nullable: true)
   String thumb;
   String bucket;
 
@@ -44,4 +47,9 @@ class Project {
   factory Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProjectToJson(this);
+
+  @override
+  String toString() {
+    return '${this.name} : ${this.priority}';
+  }
 }
