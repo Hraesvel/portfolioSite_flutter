@@ -7,6 +7,8 @@ import 'pages/pages.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 void main() {
+  final lightBlue = Color(0xffCDD6F6);
+  final string = 'Roboto';
   runApp(
     MaterialApp(
       title: "Martin's Portfolio",
@@ -15,37 +17,42 @@ void main() {
         brightness: Brightness.dark,
         primaryColor: Color(0xff0a192f),
         accentColor: Color(0xffeb3575),
-        primaryColorLight: Color(0xffB7BEDB),
+        primaryColorLight: lightBlue,
         textTheme: TextTheme(
             headline1: TextStyle(
                 fontSize: 60.0,
+                color: lightBlue,
                 fontWeight: FontWeight.w500,
-                fontFamily: 'Roboto'),
+                fontFamily: string),
             headline2: TextStyle(
                 fontSize: 38.0,
+                color: lightBlue,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Roboto'),
+                fontFamily: string),
             headline3: TextStyle(
                 fontSize: 24.0,
+                color: lightBlue,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Roboto'),
+                fontFamily: string),
             headline4: TextStyle(
                 color: Color(0xffB7BEDB).withOpacity(.55),
                 fontSize: 18.0,
                 fontWeight: FontWeight.w300,
-                fontFamily: 'Roboto'),
+                fontFamily: string),
             bodyText1: TextStyle(
-                fontSize: 18.0,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w400,
-                color: Color(0xffB7BEDB)),
+              fontSize: 18.0,
+              fontFamily: string,
+              fontWeight: FontWeight.w400,
+              color: lightBlue,
+            ),
             bodyText2: TextStyle(
-                fontSize: 16.0,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w400,
-                color: Color(0xffB7BEDB)),
+              fontSize: 16.0,
+              fontFamily: string,
+              fontWeight: FontWeight.w400,
+              color: lightBlue,
+            ),
             button: TextStyle(
-                fontFamily: 'Roboto',
+                fontFamily: string,
                 fontSize: 14.0,
                 color: Color(0xffeb3575),
                 fontWeight: FontWeight.w100)),
@@ -131,19 +138,7 @@ class Home extends StatelessWidget {
         height: 600,
         decoration: BoxDecoration(color: Colors.purple),
       ),
-      Container(
-        margin: EdgeInsets.only(bottom: 64),
-        height: 80,
-        decoration: BoxDecoration(color: Colors.transparent),
-        child: Center(
-          child: Text(
-            "© Martin Smith 2021",
-            textAlign: TextAlign.center,
-            style:
-                TextStyle(color: Theme.of(context).accentColor.withOpacity(.6)),
-          ),
-        ),
-      ),
+      Footer(),
     ];
 
     var list = ScrollablePositionedList.builder(
@@ -155,8 +150,26 @@ class Home extends StatelessWidget {
       itemPositionsListener: itemPositionsListener,
     );
 
+    List<Widget> drawer = [
+      DrawerHeader(
+        child: null,
+        decoration: BoxDecoration(color: Theme.of(context).primaryColorLight),
+      )
+    ];
+    drawer.addAll(actionButtons);
+
     return Scaffold(
       appBar: CustomAppBar(actions: actionButtons),
+      drawer: Drawer(
+          child: ListView.builder(
+        itemCount: drawer.length,
+        itemBuilder: (_, idx) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: drawer[idx],
+          );
+        },
+      )),
       body: Container(
         color: Color(0xff0a192f),
         child: Stack(
@@ -170,8 +183,45 @@ class Home extends StatelessWidget {
   }
 }
 
+class Footer extends StatelessWidget {
+  const Footer({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 32, bottom: 64),
+      height: 80,
+      decoration: BoxDecoration(color: Colors.transparent),
+      child: Column(
+        children: [
+          Text(
+            "© Martin Smith 2021",
+            textAlign: TextAlign.center,
+            style:
+                TextStyle(color: Theme.of(context).accentColor.withOpacity(.6)),
+          ),
+          FlatButton(
+            onPressed: () => showAboutDialog(
+              context: context,
+              applicationVersion: '0.0.1',
+              applicationLegalese: '',
+            ),
+            child: Text("About"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget> actions;
+
+  CustomAppBar({Key key, this.actions})
+      : preferredSize = Size.fromHeight(128),
+        super(key: key);
 
   @override
   final Size preferredSize;
@@ -187,20 +237,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             right: MediaQuery.of(context).size.width * 0.35,
             top: 25,
             bottom: 25),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: actions,
-        ),
+        child: MediaQuery.of(context).size.width <= 980
+            ? IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  debugPrint("opening Drawer");
+                  Scaffold.of(context).openDrawer();
+                })
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: actions,
+              ),
       ),
     ));
   }
-
-  CustomAppBar({@required this.actions}) : preferredSize = Size.fromHeight(128);
-}
-
-class Temp {
-  var name;
-  var age;
-
-  Temp({Key key, this.name: "woof", this.age: 30});
 }
