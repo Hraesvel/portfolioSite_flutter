@@ -5,37 +5,31 @@ import 'package:mustache_template/mustache_template.dart';
 import 'package:portfolio_site/utilities/common.dart';
 
 class AboutMe extends StatefulWidget {
-  const AboutMe({Key key, @required this.info, @required this.templatePath})
+  const AboutMe({Key key, @required this.info, @required this.templatePath, this.size})
       : super(key: key);
 
   final Map info;
   final String templatePath;
+  final Size size;
 
   @override
   _AboutMeState createState() => _AboutMeState();
 }
 
 class _AboutMeState extends State<AboutMe> {
-  String _aboutme;
 
   @override
   void initState() {
     super.initState();
-    // CommonUtility.loadStringAsset(widget.templatePath).then((result) {
-    //   setState(() {
-    //     // Render Mustache template
-    //     _aboutme = Template(result).renderString(widget.info);
-    //   });
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
       return FutureBuilder(
           future: _constructAboutMe(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
+          builder: (BuildContext context, AsyncSnapshot snapshot, ) {
             if (snapshot.hasData) {
-              return AboutMeBuilder(aboutMeText: snapshot.data);
+              return AboutMeBuilder(aboutMeText: snapshot.data, size: widget.size,);
             }
             return Center(
               child: SizedBox(
@@ -54,9 +48,12 @@ class _AboutMeState extends State<AboutMe> {
 }
 
 class AboutMeBuilder extends StatelessWidget {
+  final Size size;
+
   AboutMeBuilder({
     Key key,
     @required this.aboutMeText,
+    this.size
   }) : super(key: key);
 
   final String aboutMeText;

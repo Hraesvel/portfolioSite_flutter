@@ -11,9 +11,12 @@ import '../utilities/common.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:portfolio_site/types/types.dart';
-import 'package:portfolio_site/access.dart';
 
 class Experiences extends StatefulWidget {
+  final Size size;
+
+  const Experiences({Key key, this.size}) : super(key: key);
+
   @override
   _ExperiencesState createState() => _ExperiencesState();
 }
@@ -53,11 +56,12 @@ class _ExperiencesState extends State<Experiences> {
                 debugPrint(snapshot.error.toString());
               if (!snapshot.hasData)
                 return Container(
-                  height: 500,
-                  child: SizedBox(
-                    // child: CircularProgressIndicator(),
-                    height: 60,
-                    width: 60,
+                  child: Center(
+                    child: SizedBox(
+                      child: CircularProgressIndicator(),
+                      height: 60,
+                      width: 60,
+                    ),
                   ),
                 );
 
@@ -78,7 +82,7 @@ class _ExperiencesState extends State<Experiences> {
                       scrollDirection: Axis.horizontal,
                       children: List<Widget>.generate(
                         expData.count,
-                        (index) => ExpFlatButton(
+                        (index) => ExpTextButton(
                           idx: index,
                           experience: this.expData.data[index],
                           parent: this,
@@ -87,11 +91,10 @@ class _ExperiencesState extends State<Experiences> {
                     ),
                   ),
                   currentExp,
-                  FlatButton(
+                  TextButton(
                       onPressed: () => launch(Uri.parse(
                               "assets/assets/static/Martin_Backend_Engineer.pdf")
                           .toString()),
-                      padding: EdgeInsets.all(0.0),
                       child: Container(
                         height: 60,
                         width: 128,
@@ -136,12 +139,12 @@ class _ExperiencesState extends State<Experiences> {
   }
 }
 
-class ExpFlatButton extends StatelessWidget {
+class ExpTextButton extends StatelessWidget {
   final int idx;
   final Experience experience;
   final _ExperiencesState _parent;
 
-  ExpFlatButton({
+  ExpTextButton({
     Key key,
     @required this.idx,
     @required this.experience,
@@ -152,7 +155,7 @@ class ExpFlatButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 175,
-      child: FlatButton(
+      child: TextButton(
           onPressed: () {
             // ignore: invalid_use_of_protected_member
             _parent.setState(() {

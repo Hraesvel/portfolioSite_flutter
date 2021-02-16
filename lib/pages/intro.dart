@@ -1,12 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:portfolio_site/utilities/common.dart';
 
-class Introduction extends StatelessWidget  {
+class Introduction extends StatelessWidget {
   final Map info;
 
-  Introduction({Key key, @required this.info}) : super(key: key);
+  final Size size;
+
+  Introduction({Key key, @required this.info, this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,7 @@ class Introduction extends StatelessWidget  {
             SizedBox(
               height: 64,
             ),
-            FlatButton(
+            TextButton(
                 onPressed: () {
                   Uri emailMe = Uri(
                       scheme: "mailto",
@@ -47,7 +51,6 @@ class Introduction extends StatelessWidget  {
 
                   launch(emailMe.toString());
                 },
-                padding: EdgeInsets.all(0.0),
                 child: Container(
                   height: 60,
                   width: 128,
@@ -81,13 +84,8 @@ class Introduction extends StatelessWidget  {
   }
 
   String intoJson() {
-
-    var map = {
-      'type' : 'Introduction',
-      'info': this.info
-    };
+    var map = {'type': 'Introduction', 'info': this.info};
 
     return JsonEncoder().convert(map);
   }
 }
-

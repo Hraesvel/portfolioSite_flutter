@@ -10,6 +10,9 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Projects extends StatefulWidget {
+  final Size size;
+
+  const Projects({Key key, this.size}) : super(key: key);
   @override
   _ProjectsState createState() => _ProjectsState();
 }
@@ -117,7 +120,7 @@ class _ProjectsState extends State<Projects> {
         this.projects.backend.sort((a, b) => a.priority.compareTo(b.priority));
       } catch (e) {
         print("whoops");
-        debugPrint(e.toString());
+        // debugPrint(e.toString());
       }
     }
     return this.projects;
@@ -182,7 +185,6 @@ class _ProjectsState extends State<Projects> {
             childAspectRatio: (size.width / size.height)),
       ));
 
-    debugPrint(children.toString());
     this.bp = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
@@ -313,7 +315,7 @@ class BackendWidget extends StatelessWidget {
       Spacer(
         flex: 5,
       ),
-      FlatButton(
+      TextButton(
           onPressed: () => launch(this.project.link),
           child: Text(
             "View on Github ->",

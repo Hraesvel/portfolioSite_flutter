@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio_site/side_bar.dart';
+import 'package:portfolio_site/utilities/common.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'pages/pages.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -72,80 +73,145 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     var dur = Duration(milliseconds: 200);
     List<Widget> actionButtons = [
-      FlatButton(
+      TextButton(
         onPressed: () {
           itemScrollController.scrollTo(index: 1, duration: dur);
         },
-        child: Text("About Me",
-            style: TextStyle(
-                fontSize: 14.0,
-                color: Color(0xffeb3575),
-                fontWeight: FontWeight.w100)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("About Me",
+              style: TextStyle(
+                  fontSize: 14.0,
+                  color: Color(0xffeb3575),
+                  fontWeight: FontWeight.w100)),
+        ),
       ),
-      FlatButton(
+      TextButton(
         onPressed: () {
           itemScrollController.scrollTo(index: 2, duration: dur);
         },
-        child: Text("Experiences",
-            style: TextStyle(
-                fontSize: 14.0,
-                color: Color(0xffeb3575),
-                fontWeight: FontWeight.w100)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Experiences",
+              style: TextStyle(
+                  fontSize: 14.0,
+                  color: Color(0xffeb3575),
+                  fontWeight: FontWeight.w100)),
+        ),
       ),
-      FlatButton(
+      TextButton(
         onPressed: () {
           itemScrollController.scrollTo(index: 3, duration: dur);
         },
-        child: Text("Projects",
-            style: TextStyle(
-                fontSize: 14.0,
-                color: Color(0xffeb3575),
-                fontWeight: FontWeight.w100)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Projects",
+              style: TextStyle(
+                  fontSize: 14.0,
+                  color: Color(0xffeb3575),
+                  fontWeight: FontWeight.w100)),
+        ),
       ),
-      FlatButton(
+      TextButton(
         onPressed: () {
           itemScrollController.scrollTo(index: 4, duration: dur);
         },
-        child: Text("Contact Me",
-            style: TextStyle(
-                fontSize: 14.0,
-                color: Color(0xffeb3575),
-                fontWeight: FontWeight.w100)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Contact Me",
+              style: TextStyle(
+                  fontSize: 14.0,
+                  color: Color(0xffeb3575),
+                  fontWeight: FontWeight.w100)),
+        ),
       ),
-      FlatButton(
+      TextButton(
         onPressed: () => launch(
             Uri.parse("assets/assets/static/Martin_Backend_Engineer.pdf")
                 .toString()),
-        child: Text("Resume",
-            style: TextStyle(
-                fontSize: 14.0,
-                color: Color(0xffeb3575),
-                fontWeight: FontWeight.w100)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Resume",
+              style: TextStyle(
+                  fontSize: 14.0,
+                  color: Color(0xffeb3575),
+                  fontWeight: FontWeight.w100)),
+        ),
       ),
     ];
 
     List<Widget> pages = [
       Introduction(
         info: info,
+        size: MediaQuery.of(context).size,
       ),
       AboutMe(
         info: info,
         templatePath: "assets/text_template/about_me.mustache",
+        size: MediaQuery.of(context).size,
       ),
-      Experiences(),
-      Projects(),
+      Experiences(
+        size: MediaQuery.of(context).size,
+      ),
+      Projects(
+        size: MediaQuery.of(context).size,
+      ),
       Container(
-        height: 600,
-        decoration: BoxDecoration(color: Colors.purple),
+        height: 800,
+        decoration: BoxDecoration(),
+        child: Column(
+          children: [
+            Spacer(
+              flex: 2,
+            ),
+            Text(
+              "Contact me",
+              style: Theme.of(context).textTheme.headline2,
+            ),
+            Spacer(
+              flex: 1,
+            ),
+            SizedBox(
+              width: 450,
+              child: Text(
+                "Thanks for visiting my site. I’d love to hear from you. Feel free to drop me a line or to connect with me on social media. Cheers!",
+                style: Theme.of(context).textTheme.bodyText2,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+            TextButton(
+                onPressed: () => launch(Uri.parse(
+                        "assets/assets/static/Martin_Backend_Engineer.pdf")
+                    .toString()),
+                child: Container(
+                  height: 60,
+                  width: 128,
+                  alignment: Alignment.center,
+                  child:
+                      Text("Resume", style: Theme.of(context).textTheme.button),
+                  decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      border: Border.all(
+                          width: 1,
+                          color:
+                              Theme.of(context).accentColor.withOpacity(0.40))),
+                )),
+            Spacer(
+              flex: 5,
+            ),
+            Footer(),
+          ],
+        ),
       ),
-      Footer(),
     ];
 
     var list = ScrollablePositionedList.builder(
       itemCount: pages.length,
       physics: BouncingScrollPhysics(),
-      itemBuilder: (context, index) =>
-          Center(child: SizedBox(width: 1024, child: pages[index])),
+      itemBuilder: (context, index) => Center(child: pages[index]),
       itemScrollController: itemScrollController,
       itemPositionsListener: itemPositionsListener,
     );
@@ -174,6 +240,9 @@ class Home extends StatelessWidget {
         color: Color(0xff0a192f),
         child: Stack(
           children: [
+            Container(
+              height: 1000,
+            ),
             list,
             SideBar(),
           ],
@@ -202,7 +271,7 @@ class Footer extends StatelessWidget {
             style:
                 TextStyle(color: Theme.of(context).accentColor.withOpacity(.6)),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () => showAboutDialog(
               context: context,
               applicationVersion: '0.0.1',
@@ -232,20 +301,28 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Container(
       decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       child: Padding(
-        padding: EdgeInsets.only(
-            left: 128,
-            right: MediaQuery.of(context).size.width * 0.35,
-            top: 25,
-            bottom: 25),
+        padding: CommonWidgets.defaultEdgeInset(context).copyWith(top: 25, bottom: 25),
+        //EdgeInsets.only(
+        //             left: MediaQuery.of(context).size.width * 0.120,
+        //             // right: MediaQuery.of(context).size.width * 0.35,
+        //             top: 25,
+        //             bottom: 25),
         child: MediaQuery.of(context).size.width <= 980
-            ? IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  debugPrint("opening Drawer");
-                  Scaffold.of(context).openDrawer();
-                })
-            : Row(
+            ? Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                      icon: Icon(Icons.menu),
+                      onPressed: () {
+                        debugPrint("opening Drawer");
+                        Scaffold.of(context).openDrawer();
+                      }),
+                ],
+              )
+            : Wrap(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 15,
+                crossAxisAlignment: WrapCrossAlignment.start,
                 children: actions,
               ),
       ),
