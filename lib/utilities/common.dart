@@ -21,5 +21,26 @@ class CommonUtility {
     final res = await http.get("$S3ACCESS$ep");
     return res;
   }
+}
 
+class CommonWidgets {
+  static EdgeInsets defaultEdgeInset(BuildContext context,
+      {Key key, double pageWidth = 800, double left, double right}) {
+    EdgeInsets edgeInset;
+    double mult = 0.12;
+    var edge = MediaQuery.of(context).size.width * mult;
+
+    var curWidth = MediaQuery.of(context).size.width;
+
+    if (curWidth >= 1024 ) {
+      var s = (curWidth - pageWidth)  ;
+      edge = s /2 ;
+    }
+    edgeInset = EdgeInsets.only(
+      left: left ?? edge,
+      right: right ?? edge,
+    );
+
+    return edgeInset;
+  }
 }
