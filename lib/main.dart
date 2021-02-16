@@ -243,7 +243,10 @@ class Home extends StatelessWidget {
             Container(
               height: 1000,
             ),
-            list,
+            Padding(
+              padding: CommonWidgets.defaultEdgeInset(context),
+              child: list,
+            ),
             SideBar(),
           ],
         ),
