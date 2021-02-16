@@ -76,7 +76,7 @@ class AboutMeBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: Padding(
-      padding: const EdgeInsets.only(left: 128, right: 128),
+      padding:  CommonWidgets.defaultEdgeInset(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

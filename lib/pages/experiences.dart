@@ -45,7 +45,7 @@ class _ExperiencesState extends State<Experiences> {
       height: 700,
       // decoration: BoxDecoration(color: Colors.purple),
       child: Padding(
-          padding: const EdgeInsets.only(left: 128, right: 128),
+          padding:  CommonWidgets.defaultEdgeInset(context),
           child: FutureBuilder(
             future: _constructExperience(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {

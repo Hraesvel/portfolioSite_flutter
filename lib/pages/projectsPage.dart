@@ -37,7 +37,7 @@ class _ProjectsState extends State<Projects> {
     return Container(
       // height: 1800,
       child: Padding(
-        padding: const EdgeInsets.only(left: 128, right: 128),
+        padding: CommonWidgets.defaultEdgeInset(context),
         child: Column(
           children: [
             // Frontend Projects

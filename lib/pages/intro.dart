@@ -14,7 +14,7 @@ class Introduction extends StatelessWidget  {
       height: 700,
       // decoration: BoxDecoration(color: Colors.purple.withOpacity(.2)),
       child: Padding(
-        padding: const EdgeInsets.only(left: 128, right: 128, top: 120),
+        padding: CommonWidgets.defaultEdgeInset(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
