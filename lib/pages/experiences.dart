@@ -47,72 +47,70 @@ class _ExperiencesState extends State<Experiences> {
     return Container(
       height: 700,
       // decoration: BoxDecoration(color: Colors.purple),
-      child: Padding(
-          padding:  CommonWidgets.defaultEdgeInset(context),
-          child: FutureBuilder(
-            future: _constructExperience(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasError)
-                debugPrint(snapshot.error.toString());
-              if (!snapshot.hasData)
-                return Container(
-                  child: Center(
-                    child: SizedBox(
-                      child: CircularProgressIndicator(),
-                      height: 60,
-                      width: 60,
-                    ),
-                  ),
-                );
+      child: FutureBuilder(
+        future: _constructExperience(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError)
+            debugPrint(snapshot.error.toString());
+          if (!snapshot.hasData)
+            return Container(
+              child: Center(
+                child: SizedBox(
+                  child: CircularProgressIndicator(),
+                  height: 60,
+                  width: 60,
+                ),
+              ),
+            );
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Experiences",
-                    style: Theme.of(context).textTheme.headline2,
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Container(
-                    width: 550,
-                    height: 54,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: List<Widget>.generate(
-                        expData.count,
-                        (index) => ExpTextButton(
-                          idx: index,
-                          experience: this.expData.data[index],
-                          parent: this,
-                        ),
-                      ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Experiences",
+                style: Theme.of(context).textTheme.headline2,
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Container(
+                width: 550,
+                height: 54,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: List<Widget>.generate(
+                    expData.count,
+                    (index) => ExpTextButton(
+                      idx: index,
+                      experience: this.expData.data[index],
+                      parent: this,
                     ),
                   ),
-                  currentExp,
-                  TextButton(
-                      onPressed: () => launch(Uri.parse(
-                              "assets/assets/static/Martin_Backend_Engineer.pdf")
-                          .toString()),
-                      child: Container(
-                        height: 60,
-                        width: 128,
-                        alignment: Alignment.center,
-                        child: Text("Resume",
-                            style: Theme.of(context).textTheme.button),
-                        decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            border: Border.all(
-                                width: 1,
-                                color: Theme.of(context)
-                                    .accentColor
-                                    .withOpacity(0.40))),
-                      )),
-                ],
-              );
-            },
-          )),
+                ),
+              ),
+              currentExp,
+              TextButton(
+                  onPressed: () => launch(Uri.parse(
+                          "assets/assets/static/Martin_Backend_Engineer.pdf")
+                      .toString()),
+                  child: Container(
+                    height: 60,
+                    width: 128,
+                    alignment: Alignment.center,
+                    child: Text("Resume",
+                        style: Theme.of(context).textTheme.button),
+                    decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border.all(
+                            width: 1,
+                            color: Theme.of(context)
+                                .accentColor
+                                .withOpacity(0.40))),
+                  )),
+            ],
+          );
+        },
+      ),
     );
   }
 

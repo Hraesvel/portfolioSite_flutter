@@ -39,19 +39,42 @@ class _ProjectsState extends State<Projects> {
     // constructFrontend();
     return Container(
       // height: 1800,
-      child: Padding(
-        padding: CommonWidgets.defaultEdgeInset(context),
-        child: Column(
-          children: [
-            // Frontend Projects
-            FutureBuilder(
+      child: Column(
+        children: [
+          // Frontend Projects
+          FutureBuilder(
+            future: _getProjectData(),
+            builder:
+                (BuildContext context, AsyncSnapshot<ProjectData> snapshot) {
+              if (snapshot.hasData) {
+                constructFrontend(snapshot.data);
+              } else {
+                this.fp = Container(
+                  height: 500,
+                  child: Column(children: [
+                    SizedBox(
+                      child: CircularProgressIndicator(),
+                      width: 60,
+                      height: 60,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Awaiting result...'),
+                    )
+                  ]),
+                );
+              }
+              return this.fp;
+            },
+          ),
+          // Backend Projects
+          FutureBuilder(
               future: _getProjectData(),
-              builder:
-                  (BuildContext context, AsyncSnapshot<ProjectData> snapshot) {
-                if (snapshot.hasData) {
-                  constructFrontend(snapshot.data);
+              builder: (BuildContext context, AsyncSnapshot snapShot) {
+                if (snapShot.hasData) {
+                  constructBackend(snapShot.data);
                 } else {
-                  this.fp = Container(
+                  this.bp = Container(
                     height: 500,
                     child: Column(children: [
                       SizedBox(
@@ -66,35 +89,9 @@ class _ProjectsState extends State<Projects> {
                     ]),
                   );
                 }
-                return this.fp;
-              },
-            ),
-            // Backend Projects
-            FutureBuilder(
-                future: _getProjectData(),
-                builder: (BuildContext context, AsyncSnapshot snapShot) {
-                  if (snapShot.hasData) {
-                    constructBackend(snapShot.data);
-                  } else {
-                    this.bp = Container(
-                      height: 500,
-                      child: Column(children: [
-                        SizedBox(
-                          child: CircularProgressIndicator(),
-                          width: 60,
-                          height: 60,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: Text('Awaiting result...'),
-                        )
-                      ]),
-                    );
-                  }
-                  return this.bp;
-                })
-          ],
-        ),
+                return this.bp;
+              })
+        ],
       ),
     );
   }

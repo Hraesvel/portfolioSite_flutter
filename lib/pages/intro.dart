@@ -17,63 +17,60 @@ class Introduction extends StatelessWidget {
     return Container(
       height: 700,
       // decoration: BoxDecoration(color: Colors.purple.withOpacity(.2)),
-      child: Padding(
-        padding: CommonWidgets.defaultEdgeInset(context),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // SizedBox(height: 120),
-            Text(
-              "Hello, I'm Martin Smith",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // SizedBox(height: 120),
+          Text(
+            "Hello, I'm Martin Smith",
+            textAlign: TextAlign.start,
+            style: Theme.of(context).textTheme.headline1,
+          ),
+          SizedBox(
+            height: 32,
+          ),
+          Container(
+            width: 400,
+            child: Text(
+              "I'm a full-stack software engineer based in ${this.info['resident']} with experience in frontend with Flutter and React, and backend development using Python, Rust.",
               textAlign: TextAlign.start,
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.bodyText1,
             ),
-            SizedBox(
-              height: 32,
-            ),
-            Container(
-              width: 400,
-              child: Text(
-                "I'm a full-stack software engineer based in ${this.info['resident']} with experience in frontend with Flutter and React, and backend development using Python, Rust.",
-                textAlign: TextAlign.start,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            ),
-            SizedBox(
-              height: 64,
-            ),
-            TextButton(
-                onPressed: () {
-                  Uri emailMe = Uri(
-                      scheme: "mailto",
-                      path: "mcodesmith@gmail.com",
-                      queryParameters: {'subject': 'Greetings'});
+          ),
+          SizedBox(
+            height: 64,
+          ),
+          TextButton(
+              onPressed: () {
+                Uri emailMe = Uri(
+                    scheme: "mailto",
+                    path: "mcodesmith@gmail.com",
+                    queryParameters: {'subject': 'Greetings'});
 
-                  launch(emailMe.toString());
-                },
-                child: Container(
-                  height: 60,
-                  width: 128,
-                  alignment: Alignment.center,
-                  child: Text("Contact Me",
-                      style: Theme.of(context).textTheme.button),
-                  decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      border: Border.all(
-                          width: 1,
-                          color:
-                              Theme.of(context).accentColor.withOpacity(0.40))),
-                )),
-            Center(
-                child: SizedBox(
-                    width: 180,
-                    child: Divider(
-                      color: Theme.of(context).accentColor.withOpacity(.50),
-                      thickness: 2,
-                      height: 180,
-                    )))
-          ],
-        ),
+                launch(emailMe.toString());
+              },
+              child: Container(
+                height: 60,
+                width: 128,
+                alignment: Alignment.center,
+                child: Text("Contact Me",
+                    style: Theme.of(context).textTheme.button),
+                decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border.all(
+                        width: 1,
+                        color:
+                            Theme.of(context).accentColor.withOpacity(0.40))),
+              )),
+          Center(
+              child: SizedBox(
+                  width: 180,
+                  child: Divider(
+                    color: Theme.of(context).accentColor.withOpacity(.50),
+                    thickness: 2,
+                    height: 180,
+                  )))
+        ],
       ),
     );
   }

@@ -72,68 +72,65 @@ class AboutMeBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Padding(
-      padding:  CommonWidgets.defaultEdgeInset(context),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "About Me",
-            style: Theme.of(context).textTheme.headline2,
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          SizedBox(
-            width: 900,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        // body
-                        height: 300,
-                        constraints:
-                            BoxConstraints(maxWidth: 425, minWidth: 128),
-                        width: (MediaQuery.of(context).size.width - 256) / 2,
-                        child: SelectableText(
-                          aboutMeText,
-                          style: Theme.of(context).textTheme.bodyText2,
-                        )
-                        // Text(aboutMeText, style: Theme.of(context).textTheme.bodyText2,)
-                        ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Container(child: Text("Here are the languages I work in:")),
-                    AboutMeSkillSet(skill: skills),
-                  ],
-                ),
-                Container(
-                  width: 292,
-                  height: 292,
-                  decoration: BoxDecoration(color: Colors.blueGrey),
-                  child: Image(
-                    image: AssetImage("assets/img/self_02_HD.png"),
-                    fit: BoxFit.fill,
-                  ),
-                )
-              ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "About Me",
+              style: Theme.of(context).textTheme.headline2,
             ),
-          ),
-          Center(
-              child: SizedBox(
-                  width: 180,
-                  child: Divider(
-                    thickness: 2,
-                    color: Theme.of(context).accentColor.withOpacity(.3),
-                    height: 120,
-                  )))
-        ],
-      ),
-    ));
+            SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: 900,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          // body
+                          height: 300,
+                          constraints:
+                              BoxConstraints(maxWidth: 425, minWidth: 128),
+                          width: (MediaQuery.of(context).size.width - 256) / 2,
+                          child: SelectableText(
+                            aboutMeText,
+                            style: Theme.of(context).textTheme.bodyText2,
+                          )
+                          // Text(aboutMeText, style: Theme.of(context).textTheme.bodyText2,)
+                          ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Container(child: Text("Here are the languages I work in:")),
+                      AboutMeSkillSet(skill: skills),
+                    ],
+                  ),
+                  Container(
+                    width: 292,
+                    height: 292,
+                    decoration: BoxDecoration(color: Colors.blueGrey),
+                    child: Image(
+                      image: AssetImage("assets/img/self_02_HD.png"),
+                      fit: BoxFit.fill,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Center(
+                child: SizedBox(
+                    width: 180,
+                    child: Divider(
+                      thickness: 2,
+                      color: Theme.of(context).accentColor.withOpacity(.3),
+                      height: 120,
+                    )))
+          ],
+        ));
   }
 }
