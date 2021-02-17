@@ -72,7 +72,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var dur = Duration(milliseconds: 200);
-    List<Widget> actionButtons = [
+    final List<Widget> actionButtons = [
       TextButton(
         onPressed: () {
           itemScrollController.scrollTo(index: 1, duration: dur);
@@ -140,7 +140,8 @@ class Home extends StatelessWidget {
       ),
     ];
 
-    List<Widget> pages = [
+
+    final List<Widget> pages = [
       Introduction(
         info: info,
         size: MediaQuery.of(context).size,
@@ -199,7 +200,7 @@ class Home extends StatelessWidget {
             ),
             Padding(
               padding: CommonWidgets.defaultEdgeInset(context),
-              child: list,
+              child: listOfPages,
             ),
             SideBar(),
           ],
@@ -258,12 +259,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Container(
       decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       child: Padding(
-        padding: CommonWidgets.defaultEdgeInset(context).copyWith(top: 25, bottom: 25),
-        //EdgeInsets.only(
-        //             left: MediaQuery.of(context).size.width * 0.120,
-        //             // right: MediaQuery.of(context).size.width * 0.35,
-        //             top: 25,
-        //             bottom: 25),
+        padding: CommonWidgets.defaultEdgeInset(context)
+            .copyWith(top: 25, bottom: 25),
         child: MediaQuery.of(context).size.width <= 980
             ? Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
