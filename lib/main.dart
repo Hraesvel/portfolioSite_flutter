@@ -156,86 +156,40 @@ class Home extends StatelessWidget {
       Projects(
         size: MediaQuery.of(context).size,
       ),
-      Container(
-        height: 800,
-        decoration: BoxDecoration(),
-        child: Column(
-          children: [
-            Spacer(
-              flex: 2,
-            ),
-            Text(
-              "Contact me",
-              style: Theme.of(context).textTheme.headline2,
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            SizedBox(
-              width: 450,
-              child: Text(
-                "Thanks for visiting my site. I’d love to hear from you. Feel free to drop me a line or to connect with me on social media. Cheers!",
-                style: Theme.of(context).textTheme.bodyText2,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            TextButton(
-                onPressed: () => launch(Uri.parse(
-                        "assets/assets/static/Martin_Backend_Engineer.pdf")
-                    .toString()),
-                child: Container(
-                  height: 60,
-                  width: 128,
-                  alignment: Alignment.center,
-                  child:
-                      Text("Resume", style: Theme.of(context).textTheme.button),
-                  decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      border: Border.all(
-                          width: 1,
-                          color:
-                              Theme.of(context).accentColor.withOpacity(0.40))),
-                )),
-            Spacer(
-              flex: 5,
-            ),
-            Footer(),
-          ],
-        ),
-      ),
+      ContactMe(),
     ];
 
-    var list = ScrollablePositionedList.builder(
+    var listOfPages = ScrollablePositionedList.builder(
       itemCount: pages.length,
       physics: BouncingScrollPhysics(),
-      itemBuilder: (context, index) => Center(child: pages[index]),
+      itemBuilder: (_, index) => pages[index],
       itemScrollController: itemScrollController,
       itemPositionsListener: itemPositionsListener,
     );
 
     List<Widget> drawer = [
       DrawerHeader(
-        child: null,
-        decoration: BoxDecoration(color: Theme.of(context).primaryColorLight),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: Text("Navigation", textAlign: TextAlign.center,),
+        ),
+        decoration: BoxDecoration(color: Theme.of(context).accentColor),
       )
     ];
     drawer.addAll(actionButtons);
 
     return Scaffold(
       appBar: CustomAppBar(actions: actionButtons),
-      drawer: Drawer(
-          child: ListView.builder(
-        itemCount: drawer.length,
-        itemBuilder: (_, idx) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: drawer[idx],
-          );
-        },
-      )),
+      drawer: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Drawer(
+            child: ListView.builder(
+          itemCount: drawer.length,
+          itemBuilder: (_, idx) {
+            return drawer[idx];
+          },
+        )),
+      ),
       body: Container(
         color: Color(0xff0a192f),
         child: Stack(
