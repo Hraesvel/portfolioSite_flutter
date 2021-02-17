@@ -15,6 +15,7 @@ class Introduction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: 120),
       height: 700,
       // decoration: BoxDecoration(color: Colors.purple.withOpacity(.2)),
       child: Column(
@@ -62,14 +63,15 @@ class Introduction extends StatelessWidget {
                         color:
                             Theme.of(context).accentColor.withOpacity(0.40))),
               )),
+          Spacer(flex: 1,),
           Center(
               child: SizedBox(
                   width: 180,
                   child: Divider(
                     color: Theme.of(context).accentColor.withOpacity(.50),
                     thickness: 2,
-                    height: 180,
-                  )))
+                    // height: 180,
+                  ))),
         ],
       ),
     );

@@ -52,11 +52,6 @@ class _ProjectsState extends State<Projects> {
                 this.fp = Container(
                   height: 500,
                   child: Column(children: [
-                    SizedBox(
-                      child: CircularProgressIndicator(),
-                      width: 60,
-                      height: 60,
-                    ),
                     const Padding(
                       padding: EdgeInsets.only(top: 16),
                       child: Text('Awaiting result...'),

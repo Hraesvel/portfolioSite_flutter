@@ -50,13 +50,13 @@ class _ExperiencesState extends State<Experiences> {
       child: FutureBuilder(
         future: _constructExperience(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasError)
-            debugPrint(snapshot.error.toString());
+          if (snapshot.hasError) debugPrint(snapshot.error.toString());
           if (!snapshot.hasData)
             return Container(
+              height: 600,
               child: Center(
                 child: SizedBox(
-                  child: CircularProgressIndicator(),
+                  child: Text("Fetching Data..."),
                   height: 60,
                   width: 60,
                 ),
@@ -116,21 +116,20 @@ class _ExperiencesState extends State<Experiences> {
 
   Future<dynamic> _constructExperience() async {
     return this._memoizer.runOnce(() async {
-      this.expData = await parseExp('assets/experiences.json');
+      this.expData = await parseExp('experiences.json');
+      // create an Experience Widget from the first member of the array.
       currentExp = ExperienceWidget.fromData(expData.data[0], context);
       return this.expData;
     });
   }
 
-  Future<ExpData> parseExp(String path) async {
+  Future<ExpData> parseExp(String filename) async {
     Map<String, dynamic> out;
     String json = "";
-    http.Response res =
-        // await CommonUtility.fetchFromWeb("$S3ACCESS/experiences.json");
-        await CommonUtility.fetchFromS3(file: "experiences.json");
+    http.Response res = await CommonUtility.fetchFromS3(file: filename);
     json = res.statusCode == 200
         ? res.body
-        : await CommonUtility.loadStringAsset(path);
+        : await CommonUtility.loadStringAsset("assets/$filename");
     out = JsonDecoder().convert(json);
     ExpData exp = ExpData.fromJson(out);
     return exp;
@@ -151,7 +150,7 @@ class ExpTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: 175,
       child: TextButton(
           onPressed: () {
@@ -222,6 +221,7 @@ class ExperienceWidget extends StatelessWidget {
               tl,
               style: theme.textTheme.headline4,
             ),
+            // Todo: remove placed holders
             SizedBox(
               height: 30,
               child: ListTile(

@@ -31,11 +31,14 @@ class _AboutMeState extends State<AboutMe> {
             if (snapshot.hasData) {
               return AboutMeBuilder(aboutMeText: snapshot.data, size: widget.size,);
             }
-            return Center(
-              child: SizedBox(
-                child: CircularProgressIndicator(),
-                width: 60,
-                height: 60,
+            return Container(
+              height: 900,
+              child: Center(
+                child: SizedBox(
+                  child: Text("Fetching Data..."),
+                  width: 60,
+                  height: 60,
+                ),
               ),
             );
           });}
@@ -72,6 +75,8 @@ class AboutMeBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 900,
+      padding: EdgeInsets.only(top: 80, bottom: 80),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -82,8 +87,8 @@ class AboutMeBuilder extends StatelessWidget {
             SizedBox(
               height: 25,
             ),
-            SizedBox(
-              width: 900,
+            Container(
+              // width: 900,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,13 +127,14 @@ class AboutMeBuilder extends StatelessWidget {
                 ],
               ),
             ),
+            Spacer(flex: 1),
             Center(
                 child: SizedBox(
                     width: 180,
                     child: Divider(
                       thickness: 2,
                       color: Theme.of(context).accentColor.withOpacity(.3),
-                      height: 120,
+                      // height: 120,
                     )))
           ],
         ));
