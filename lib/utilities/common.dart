@@ -25,7 +25,7 @@ class CommonUtility {
 
 class CommonWidgets {
   static EdgeInsets defaultEdgeInset(BuildContext context,
-      {Key key, double pageWidth = 800, double left, double right}) {
+      {Key key, double pageWidth = 900, double left, double right}) {
     EdgeInsets edgeInset;
     double mult = 0.12;
     var edge = MediaQuery.of(context).size.width * mult;
