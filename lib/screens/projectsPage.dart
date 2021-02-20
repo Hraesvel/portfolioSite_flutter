@@ -193,7 +193,6 @@ class _ProjectsState extends State<Projects>
   Widget bp;
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override

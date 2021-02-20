@@ -110,7 +110,6 @@ class AboutMeBuilder extends StatelessWidget {
 
 class _AboutMeState extends State<AboutMe> with AutomaticKeepAliveClientMixin {
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
@@ -140,7 +139,6 @@ class _AboutMeState extends State<AboutMe> with AutomaticKeepAliveClientMixin {
         });
   }
 
-  //Todo: Load from a S3 bucket.
   @override
   void initState() {
     super.initState();

@@ -200,7 +200,6 @@ class _ExperiencesState extends State<Experiences>
   int _displayedIdx = 0;
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
