@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:portfolio_site/side_bar.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 // exports for screens directory
 import 'screens.dart';
@@ -73,32 +73,35 @@ class _HomeState extends State<Home> {
   //Todo: convert Map to json file or move this to a global file for easier editing.
   final Map<String, String> info = {"resident": "San Francisco, CA"};
 
-  final ItemScrollController itemScrollController = ItemScrollController();
-
-  final ItemPositionsListener itemPositionsListener =
-      ItemPositionsListener.create();
+  AutoScrollController controller;
+  final Axis scrollDirection = Axis.vertical;
 
   List<Widget> _actionButtons;
   List<Widget> _pages;
 
-  ScrollablePositionedList _listOfPages;
+  List<Widget> _listOfPages;
+
+  Duration scrollDuration = Duration(milliseconds: 800);
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(ResizeObserver(_rebuildScrollPosition));
+    // WidgetsBinding.instance.addObserver(ResizeObserver(_rebuildScrollPosition));
   }
 
   @override
   void didChangeDependencies() {
+    if (controller == null)
+      controller = AutoScrollController(
+          axis: scrollDirection,
+          viewportBoundaryGetter: () =>
+              Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom));
+
     if (_actionButtons == null) {
       var dur = Duration(milliseconds: 200);
       _actionButtons = [
         TextButton(
-          onPressed: () {
-            // itemScrollController.scrollTo(index: 1, duration: dur);
-            itemScrollController.jumpTo(index: 1);
-          },
+          onPressed: () async => await _scrollToIndex(1),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text("About Me",
@@ -109,9 +112,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         TextButton(
-          onPressed: () {
-            itemScrollController.scrollTo(index: 2, duration: dur);
-          },
+          onPressed: () async => await _scrollToIndex(2),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text("Experiences",
@@ -122,9 +123,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         TextButton(
-          onPressed: () {
-            itemScrollController.scrollTo(index: 3, duration: dur);
-          },
+          onPressed: () async => await _scrollToIndex(3),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text("Projects",
@@ -135,9 +134,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         TextButton(
-          onPressed: () {
-            itemScrollController.scrollTo(index: 4, duration: dur);
-          },
+          onPressed: () async => await _scrollToIndex(4),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text("Contact Me",
@@ -161,12 +158,6 @@ class _HomeState extends State<Home> {
           ),
         ),
       ];
-
-      if (!kReleaseMode)
-        _actionButtons.add(TextButton(
-          child: Text("Rebuild Pos"),
-          onPressed: () => _rebuildScrollPosition(),
-        ));
     }
 
     if (_pages == null) {
@@ -191,26 +182,22 @@ class _HomeState extends State<Home> {
     }
 
     if (_listOfPages == null)
-      _listOfPages = ScrollablePositionedList.builder(
-        itemCount: _pages.length,
-        // physics: BouncingScrollPhysics(),
-        itemBuilder: (_, index) => _pages[index],
-        itemScrollController: itemScrollController,
-        itemPositionsListener: itemPositionsListener,
-      );
+      _listOfPages = _pages
+          .asMap()
+          .entries
+          .map((e) => AutoScrollTag(
+              key: ValueKey(e.key),
+              controller: controller,
+              index: e.key,
+              child: e.value))
+          .toList();
 
     super.didChangeDependencies();
   }
 
   void _rebuildScrollPosition() {
     setState(() {
-      _listOfPages = ScrollablePositionedList.builder(
-        itemCount: _pages.length,
-        // physics: BouncingScrollPhysics(),
-        itemBuilder: (_, index) => _pages[index],
-        itemScrollController: itemScrollController,
-        itemPositionsListener: itemPositionsListener,
-      );
+      print("unimplemented!");
     });
   }
 
@@ -251,13 +238,21 @@ class _HomeState extends State<Home> {
             // ),
             Padding(
               padding: CommonWidgets.defaultEdgeInset(context),
-              child: _listOfPages,
+              child: ListView(
+                controller: controller,
+                scrollDirection: scrollDirection,
+                children: _listOfPages,
+              ),
             ),
             SideBar(),
           ],
         ),
       ),
     );
+  }
+
+  Future _scrollToIndex(int i) async {
+    await controller.scrollToIndex(i, duration: scrollDuration);
   }
 }
 
