@@ -73,18 +73,12 @@ class _HomeState extends State<Home> {
   //Todo: convert Map to json file or move this to a global file for easier editing.
   final Map<String, String> info = {"resident": "San Francisco, CA"};
 
-  final ItemScrollController itemScrollController = ItemScrollController();
-
-  final ItemPositionsListener itemPositionsListener =
-      ItemPositionsListener.create();
-
   AutoScrollController controller;
   final Axis scrollDirection = Axis.vertical;
 
   List<Widget> _actionButtons;
   List<Widget> _pages;
 
-  // ScrollablePositionedList _listOfPages;
   List<Widget> _listOfPages;
 
   Duration scrollDuration = Duration(milliseconds: 800);
