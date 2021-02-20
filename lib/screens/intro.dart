@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/material.dart';
 import 'package:portfolio_site/utilities/common.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Introduction extends StatelessWidget {
   final Map info;

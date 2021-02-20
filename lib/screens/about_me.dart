@@ -6,67 +6,21 @@ import 'package:portfolio_site/utilities/common.dart';
 import 'about_me_builder_row.dart';
 
 class AboutMe extends StatefulWidget {
+  final Map info;
+
+  final String templatePath;
+  final Size size;
+
   const AboutMe(
       {Key key, @required this.info, @required this.templatePath, this.size})
       : super(key: key);
-
-  final Map info;
-  final String templatePath;
-  final Size size;
 
   @override
   _AboutMeState createState() => _AboutMeState();
 }
 
-class _AboutMeState extends State<AboutMe> with AutomaticKeepAliveClientMixin {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _constructAboutMe(),
-        builder: (
-          BuildContext context,
-          AsyncSnapshot snapshot,
-        ) {
-          if (snapshot.hasData) {
-            return AboutMeBuilder(
-              aboutMeText: snapshot.data,
-              size: widget.size,
-            );
-          }
-          return Container(
-            height: 900,
-            child: Center(
-              child: SizedBox(
-                child: Text("Fetching Data..."),
-                width: 60,
-                height: 60,
-              ),
-            ),
-          );
-        });
-  }
-
-  //Todo: Load from a S3 bucket.
-  Future<String> _constructAboutMe() async {
-    String result = await CommonUtility.loadStringAsset(widget.templatePath);
-    return Template(result).renderString(widget.info);
-  }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
-}
-
 class AboutMeBuilder extends StatelessWidget {
   final Size size;
-
-  AboutMeBuilder({Key key, @required this.aboutMeText, this.size})
-      : super(key: key);
 
   final String aboutMeText;
 
@@ -80,6 +34,9 @@ class AboutMeBuilder extends StatelessWidget {
     "Flutter 🦋",
     "React ☢",
   ];
+
+  AboutMeBuilder({Key key, @required this.aboutMeText, this.size})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -148,5 +105,49 @@ class AboutMeBuilder extends StatelessWidget {
                     )))
           ],
         ));
+  }
+}
+
+class _AboutMeState extends State<AboutMe> with AutomaticKeepAliveClientMixin {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: _constructAboutMe(),
+        builder: (
+          BuildContext context,
+          AsyncSnapshot snapshot,
+        ) {
+          if (snapshot.hasData) {
+            return AboutMeBuilder(
+              aboutMeText: snapshot.data,
+              size: widget.size,
+            );
+          }
+          return Container(
+            height: 900,
+            child: Center(
+              child: SizedBox(
+                child: Text("Fetching Data..."),
+                width: 60,
+                height: 60,
+              ),
+            ),
+          );
+        });
+  }
+
+  //Todo: Load from a S3 bucket.
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<String> _constructAboutMe() async {
+    String result = await CommonUtility.loadStringAsset(widget.templatePath);
+    return Template(result).renderString(widget.info);
   }
 }

@@ -1,7 +1,8 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:portfolio_site/main.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:html';
 
 class ContactMe extends StatelessWidget {
   const ContactMe({
