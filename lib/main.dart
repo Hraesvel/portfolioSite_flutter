@@ -64,125 +64,174 @@ void main() {
   );
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  //Todo: convert Map to json file or move this to a global file for easier editing.
   final Map<String, String> info = {"resident": "San Francisco, CA"};
 
   final ItemScrollController itemScrollController = ItemScrollController();
+
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
 
+  List<Widget> _actionButtons;
+  List<Widget> _pages;
+
+  ScrollablePositionedList _listOfPages;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(ResizeObserver(_rebuildScrollPosition));
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_actionButtons == null) {
+      var dur = Duration(milliseconds: 200);
+      _actionButtons = [
+        TextButton(
+          onPressed: () {
+            // itemScrollController.scrollTo(index: 1, duration: dur);
+            itemScrollController.jumpTo(index: 1);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("About Me",
+                style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xffeb3575),
+                    fontWeight: FontWeight.w100)),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            itemScrollController.scrollTo(index: 2, duration: dur);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Experiences",
+                style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xffeb3575),
+                    fontWeight: FontWeight.w100)),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            itemScrollController.scrollTo(index: 3, duration: dur);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Projects",
+                style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xffeb3575),
+                    fontWeight: FontWeight.w100)),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            itemScrollController.scrollTo(index: 4, duration: dur);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Contact Me",
+                style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xffeb3575),
+                    fontWeight: FontWeight.w100)),
+          ),
+        ),
+        TextButton(
+          onPressed: () => launch(
+              Uri.parse("assets/assets/static/Martin_Backend_Engineer.pdf")
+                  .toString()),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Resume",
+                style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xffeb3575),
+                    fontWeight: FontWeight.w100)),
+          ),
+        ),
+      ];
+
+      if (!kReleaseMode)
+        _actionButtons.add(TextButton(
+          child: Text("Rebuild Pos"),
+          onPressed: () => _rebuildScrollPosition(),
+        ));
+    }
+
+    if (_pages == null) {
+      _pages = [
+        Introduction(
+          info: info,
+          size: MediaQuery.of(context).size,
+        ),
+        AboutMe(
+          info: info,
+          templatePath: "assets/text_template/about_me.mustache",
+          size: MediaQuery.of(context).size,
+        ),
+        Experiences(
+          size: MediaQuery.of(context).size,
+        ),
+        Projects(
+          size: MediaQuery.of(context).size,
+        ),
+        ContactMe(),
+      ];
+    }
+
+    if (_listOfPages == null)
+      _listOfPages = ScrollablePositionedList.builder(
+        itemCount: _pages.length,
+        // physics: BouncingScrollPhysics(),
+        itemBuilder: (_, index) => _pages[index],
+        itemScrollController: itemScrollController,
+        itemPositionsListener: itemPositionsListener,
+      );
+
+    super.didChangeDependencies();
+  }
+
+  void _rebuildScrollPosition() {
+    setState(() {
+      _listOfPages = ScrollablePositionedList.builder(
+        itemCount: _pages.length,
+        // physics: BouncingScrollPhysics(),
+        itemBuilder: (_, index) => _pages[index],
+        itemScrollController: itemScrollController,
+        itemPositionsListener: itemPositionsListener,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var dur = Duration(milliseconds: 200);
-    final List<Widget> actionButtons = [
-      TextButton(
-        onPressed: () {
-          itemScrollController.scrollTo(index: 1, duration: dur);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("About Me",
-              style: TextStyle(
-                  fontSize: 14.0,
-                  color: Color(0xffeb3575),
-                  fontWeight: FontWeight.w100)),
-        ),
-      ),
-      TextButton(
-        onPressed: () {
-          itemScrollController.scrollTo(index: 2, duration: dur);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Experiences",
-              style: TextStyle(
-                  fontSize: 14.0,
-                  color: Color(0xffeb3575),
-                  fontWeight: FontWeight.w100)),
-        ),
-      ),
-      TextButton(
-        onPressed: () {
-          itemScrollController.scrollTo(index: 3, duration: dur);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Projects",
-              style: TextStyle(
-                  fontSize: 14.0,
-                  color: Color(0xffeb3575),
-                  fontWeight: FontWeight.w100)),
-        ),
-      ),
-      TextButton(
-        onPressed: () {
-          itemScrollController.scrollTo(index: 4, duration: dur);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Contact Me",
-              style: TextStyle(
-                  fontSize: 14.0,
-                  color: Color(0xffeb3575),
-                  fontWeight: FontWeight.w100)),
-        ),
-      ),
-      TextButton(
-        onPressed: () => launch(
-            Uri.parse("assets/assets/static/Martin_Backend_Engineer.pdf")
-                .toString()),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Resume",
-              style: TextStyle(
-                  fontSize: 14.0,
-                  color: Color(0xffeb3575),
-                  fontWeight: FontWeight.w100)),
-        ),
-      ),
-    ];
-
-
-    final List<Widget> pages = [
-      Introduction(
-        info: info,
-        size: MediaQuery.of(context).size,
-      ),
-      AboutMe(
-        info: info,
-        templatePath: "assets/text_template/about_me.mustache",
-        size: MediaQuery.of(context).size,
-      ),
-      Experiences(
-        size: MediaQuery.of(context).size,
-      ),
-      Projects(
-        size: MediaQuery.of(context).size,
-      ),
-      ContactMe(),
-    ];
-
-    var listOfPages = ScrollablePositionedList.builder(
-      itemCount: pages.length,
-      physics: BouncingScrollPhysics(),
-      itemBuilder: (_, index) => pages[index],
-      itemScrollController: itemScrollController,
-      itemPositionsListener: itemPositionsListener,
-    );
-
     List<Widget> drawer = [
       DrawerHeader(
         child: Padding(
           padding: const EdgeInsets.only(top: 12.0),
-          child: Text("Navigation", textAlign: TextAlign.center,),
+          child: Text(
+            "Navigation",
+            textAlign: TextAlign.center,
+          ),
         ),
         decoration: BoxDecoration(color: Theme.of(context).accentColor),
       )
     ];
-    drawer.addAll(actionButtons);
+    drawer.addAll(_actionButtons);
 
     return Scaffold(
-      appBar: CustomAppBar(actions: actionButtons),
+      appBar: CustomAppBar(actions: _actionButtons),
       drawer: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Drawer(
@@ -197,12 +246,12 @@ class Home extends StatelessWidget {
         color: Color(0xff0a192f),
         child: Stack(
           children: [
-            Container(
-              height: 1000,
-            ),
+            // Container(
+            //   height: 1000,
+            // ),
             Padding(
               padding: CommonWidgets.defaultEdgeInset(context),
-              child: listOfPages,
+              child: _listOfPages,
             ),
             SideBar(),
           ],
@@ -283,5 +332,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
       ),
     ));
+  }
+}
+
+class ResizeObserver extends WidgetsBindingObserver {
+  final VoidCallback onResize;
+
+  ResizeObserver(this.onResize);
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    onResize();
   }
 }
