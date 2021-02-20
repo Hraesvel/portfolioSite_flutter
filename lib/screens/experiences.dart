@@ -44,6 +44,10 @@ class _ExperiencesState extends State<Experiences> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
+
     return Container(
       height: 700,
       // decoration: BoxDecoration(color: Colors.purple),
@@ -74,6 +78,7 @@ class _ExperiencesState extends State<Experiences> {
                 height: 25,
               ),
               Container(
+                // Experience Nav bar
                 width: 550,
                 height: 54,
                 child: ListView(
@@ -176,9 +181,13 @@ class ExpTextButton extends StatelessWidget {
               ))),
     );
   }
+
+
 }
 
 class ExperienceWidget extends StatelessWidget {
+  final _icon = const Icon(Icons.label_important_outline);
+
   const ExperienceWidget(
       {Key key,
       @required this.headline,
@@ -188,7 +197,8 @@ class ExperienceWidget extends StatelessWidget {
       this.end: 0,
       this.isCurrent: true,
       List<String> achievements: const <String>[]})
-      : super(key: key);
+      : this._achievements = achievements,
+        super(key: key);
 
   final ThemeData theme;
   final String headline;
@@ -196,15 +206,40 @@ class ExperienceWidget extends StatelessWidget {
   final int start;
   final int end;
   final bool isCurrent;
+  final List<String> _achievements;
 
   @override
   Widget build(BuildContext context) {
     RichText hl = RichText(text: TextSpan(text: "Blank"));
-    String tl = "Month-year to Month-year";
+    String timeline = "Month-year to Month-year";
+
+    List<Widget> children = [];
+
     try {
       hl = parseDetail(headline);
-      tl =
+      timeline =
           "${convertTime(start)} - ${isCurrent ? "Present" : convertTime(end)}";
+
+      children = [
+        hl,
+        Text(
+          timeline,
+          style: theme.textTheme.headline4,
+        ),
+        SizedBox(height: 20,),
+      ];
+
+      _achievements.forEach((achievement) {
+        children.add(Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: ListTile(
+            leading: _icon,
+            title: Text(achievement),
+            contentPadding: EdgeInsets.all(0),
+            minLeadingWidth: 15,
+          ),
+        ));
+      });
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -215,38 +250,7 @@ class ExperienceWidget extends StatelessWidget {
         padding: const EdgeInsets.only(top: 25, bottom: 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            hl,
-            Text(
-              tl,
-              style: theme.textTheme.headline4,
-            ),
-            // Todo: remove placed holders
-            SizedBox(
-              height: 30,
-              child: ListTile(
-                leading: Text("❤"),
-                title: Text("Woof"),
-                contentPadding: EdgeInsets.all(0),
-                minLeadingWidth: 15,
-              ),
-            ),
-            SizedBox(
-              height: 30,
-              child: ListTile(
-                leading: Text("❤"),
-                title: Text("Woof"),
-                contentPadding: EdgeInsets.all(0),
-                minLeadingWidth: 15,
-              ),
-            ),
-            ListTile(
-              leading: Text("❤"),
-              title: Text("Woof"),
-              contentPadding: EdgeInsets.all(0),
-              minLeadingWidth: 15,
-            ),
-          ],
+          children: children,
         ),
       ),
     );
@@ -262,6 +266,7 @@ class ExperienceWidget extends StatelessWidget {
         end: data.end,
         theme: Theme.of(context));
   }
+
 
   String convertTime(int milliseconds, {format: "MMMM yyyy"}) {
     var dt = DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);

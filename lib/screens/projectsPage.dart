@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio_site/access.dart';
-import 'package:portfolio_site/pages/about_me_builder_row.dart';
+import 'about_me_builder_row.dart';
 import 'package:portfolio_site/types/types.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -13,6 +14,7 @@ class Projects extends StatefulWidget {
   final Size size;
 
   const Projects({Key key, this.size}) : super(key: key);
+
   @override
   _ProjectsState createState() => _ProjectsState();
 }
@@ -171,7 +173,7 @@ class _ProjectsState extends State<Projects> {
         children: prjList,
         addRepaintBoundaries: false,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount: MediaQuery.of(context).size.width > 800 ? 2 : 1,
             crossAxisSpacing: 25.0,
             mainAxisSpacing: 15.0,
             childAspectRatio: (size.width / size.height)),
@@ -217,34 +219,47 @@ class FrontendWidget extends StatelessWidget {
       ));
     }
 
-    textBody.add(Spacer(
-      flex: 1,
+    textBody.add(Spacer(flex: 1,));
+    textBody.add(TextButton(
+      child: Text(
+        "View on Github ->",
+        style: Theme.of(context).textTheme.button,
+      ),
+      onPressed: () => launch(project.link),
     ));
-    textBody.add(Text(
-      "Link",
-      style: Theme.of(context).textTheme.button,
-    ));
+    textBody.add(Spacer(flex: 1,));
+
+    var fadeInImage = FadeInImage.memoryNetwork(
+      imageScale: 0.95,
+      placeholder: kTransparentImage,
+      image: this.image,
+      fit: BoxFit.cover,
+    );
 
     var children = [
-      Container(
-        constraints: BoxConstraints(
-            // minWidth: 128,
-            // minHeight: 128,
-            maxHeight: 321 * 0.7,
-            maxWidth: 516 * 0.7),
-        decoration: BoxDecoration(
-            color: Color(0xff081F41),
-            border: Border.all(
-                width: 2.0, color: Colors.blueGrey.withOpacity(0.3))),
-        child: AspectRatio(
-            aspectRatio: 1.6,
-            child: FadeInImage.memoryNetwork(
-              imageScale: 0.95,
-              placeholder: kTransparentImage,
-              image: this.image,
-              fit: BoxFit.cover,
-            )),
+      MaterialButton(
+        child: Container(
+          constraints: BoxConstraints(
+              // minWidth: 128,
+              // minHeight: 128,
+              maxHeight: 321 * 0.7,
+              maxWidth: 516 * 0.7),
+          decoration: BoxDecoration(
+              color: Color(0xff081F41),
+              border: Border.all(
+                  width: 2.0, color: Colors.blueGrey.withOpacity(0.3))),
+          child: AspectRatio(aspectRatio: 1.6, child: fadeInImage),
+        ),
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              children: [AspectRatio(aspectRatio: 16 / 9, child: fadeInImage)],
+            );
+          },
+        ),
       ),
+
       SizedBox(width: 35, height: 35),
       // Spacer(flex: 1,),
       Container(

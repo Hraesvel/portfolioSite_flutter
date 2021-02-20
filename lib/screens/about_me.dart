@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:portfolio_site/pages/about_me_builder_row.dart';
+import 'about_me_builder_row.dart';
 import 'package:mustache_template/mustache_template.dart';
 import 'package:portfolio_site/utilities/common.dart';
 
@@ -65,7 +65,7 @@ class AboutMeBuilder extends StatelessWidget {
     "C 🌊",
     "Rust 🦀",
     "Python 🐍",
-    "Csharp 🌊#️⃣",
+    "Csharp 🌊#",
     "Javascript 💁‍♂",
     "Html & CSS 😭",
     "Flutter 🦋",
@@ -120,7 +120,7 @@ class AboutMeBuilder extends StatelessWidget {
                     height: 292,
                     decoration: BoxDecoration(color: Colors.blueGrey),
                     child: Image(
-                      image: AssetImage("assets/img/self_02_HD.png"),
+                      image: AssetImage("assets/img/self_02.png"),
                       fit: BoxFit.fill,
                     ),
                   )
