@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:portfolio_site/side_bar.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'pages/pages.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+
+// exports for screens directory
+import 'screens.dart';
 
 void main() {
   final lightBlue = Color(0xffCDD6F6);
