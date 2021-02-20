@@ -26,7 +26,7 @@ dependencies:
   url_launcher: ^5.1.4
   url_launcher_web: ^0.1.0
   mustache_template: ^1.0.0+1
-  scrollable_positioned_list: ^0.1.9
+  scroll_to_index: ^1.0.6
   fluttericon: ^1.0.7
   intl: ^0.16.1
   json_annotation: ^3.1.1
@@ -109,6 +109,11 @@ flutter:
           weight: 500
         - asset: assets/fonts/roboto/Roboto-Bold.ttf
           weight: 700
+
+    - family: Noto
+      fonts:
+         - asset: assets/fonts/noto/NotoMono-Regular.ttf
+
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
