@@ -9,6 +9,7 @@ import 'package:portfolio_site/types/types.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:async/async.dart';
 
 class Projects extends StatefulWidget {
   final Size size;
@@ -21,6 +22,7 @@ class Projects extends StatefulWidget {
 
 class _ProjectsState extends State<Projects> {
   ProjectData projects;
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
 
   Widget fp;
   Widget bp;
@@ -47,9 +49,9 @@ class _ProjectsState extends State<Projects> {
           FutureBuilder(
             future: _getProjectData(),
             builder:
-                (BuildContext context, AsyncSnapshot<ProjectData> snapshot) {
+                (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
-                constructFrontend(snapshot.data);
+                constructFrontend();
               } else {
                 this.fp = Container(
                   height: 500,
@@ -69,7 +71,7 @@ class _ProjectsState extends State<Projects> {
               future: _getProjectData(),
               builder: (BuildContext context, AsyncSnapshot snapShot) {
                 if (snapShot.hasData) {
-                  constructBackend(snapShot.data);
+                  constructBackend();
                 } else {
                   this.bp = Container(
                     height: 500,
@@ -96,31 +98,39 @@ class _ProjectsState extends State<Projects> {
   /// Send a request to an Amazon S3 bucket relation to projects
   /// This method construct a `ProjectData` from the response and propagate
   /// the 'projects' field
-  Future<ProjectData> _getProjectData() async {
-    if (this.projects != null) return this.projects;
+  Future<dynamic> _getProjectData() async {
+    return _memoizer.runOnce(() async {
+      if (this.projects != null) return this.projects;
 
-    var res = await CommonUtility.fetchFromS3(
-        bucket: "projects", file: "projects.json");
-    if (res.statusCode == 200) {
-      try {
-        // var bytes = res.body.codeUnits;
-        // Map<String, dynamic> out = JsonDecoder().convert(utf8.decode(bytes));
-        Map<String, dynamic> out = JsonDecoder().convert(res.body);
-        this.projects = ProjectData.fromJson(out);
-        // debugPrint(this.projects.frontend.toString());
-        this.projects.frontend.sort((a, b) => a.priority.compareTo(b.priority));
-        // debugPrint(this.projects.frontend.toString());
+      var res = await CommonUtility.fetchFromS3(
+          bucket: "projects", file: "projects.json");
+      if (res.statusCode == 200) {
+        try {
+          // var bytes = res.body.codeUnits;
+          // Map<String, dynamic> out = JsonDecoder().convert(utf8.decode(bytes));
+          Map<String, dynamic> out = JsonDecoder().convert(res.body);
+          this.projects = ProjectData.fromJson(out);
+          // debugPrint(this.projects.frontend.toString());
+          this
+              .projects
+              .frontend
+              .sort((a, b) => a.priority.compareTo(b.priority));
+          // debugPrint(this.projects.frontend.toString());
 
-        this.projects.backend.sort((a, b) => a.priority.compareTo(b.priority));
-      } catch (e) {
-        print("whoops");
-        // debugPrint(e.toString());
+          this
+              .projects
+              .backend
+              .sort((a, b) => a.priority.compareTo(b.priority));
+        } catch (e) {
+          print("whoops");
+          // debugPrint(e.toString());
+        }
       }
-    }
-    return this.projects;
+      return this.projects;
+    });
   }
 
-  void constructFrontend(ProjectData projects) {
+  void constructFrontend() {
     List<Widget> content = [
       Padding(
         padding: const EdgeInsets.only(bottom: 50),
@@ -131,7 +141,7 @@ class _ProjectsState extends State<Projects> {
       ),
     ];
 
-    for (Project p in projects.frontend) {
+    for (Project p in this.projects.frontend) {
       content.add(FrontendWidget(project: p));
       content.add(SizedBox(
         width: 50,
@@ -145,7 +155,7 @@ class _ProjectsState extends State<Projects> {
     );
   }
 
-  void constructBackend(ProjectData projects) {
+  void constructBackend() {
     List<Widget> children = [
       Padding(
         padding: const EdgeInsets.only(bottom: 50),
@@ -160,7 +170,7 @@ class _ProjectsState extends State<Projects> {
 
     var size = Size(40, 25);
 
-    for (Project prj in projects.backend) {
+    for (Project prj in this.projects.backend) {
       prjList.add(BackendWidget(
         prj,
         size: size,
@@ -219,7 +229,9 @@ class FrontendWidget extends StatelessWidget {
       ));
     }
 
-    textBody.add(Spacer(flex: 1,));
+    textBody.add(Spacer(
+      flex: 1,
+    ));
     textBody.add(TextButton(
       child: Text(
         "View on Github ->",
@@ -227,7 +239,9 @@ class FrontendWidget extends StatelessWidget {
       ),
       onPressed: () => launch(project.link),
     ));
-    textBody.add(Spacer(flex: 1,));
+    textBody.add(Spacer(
+      flex: 1,
+    ));
 
     var fadeInImage = FadeInImage.memoryNetwork(
       imageScale: 0.95,
