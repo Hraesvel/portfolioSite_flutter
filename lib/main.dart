@@ -238,10 +238,12 @@ class _HomeState extends State<Home> {
             // ),
             Padding(
               padding: CommonWidgets.defaultEdgeInset(context),
-              child: ListView(
+              child: ListView.builder(itemCount: _listOfPages.length,
+                itemBuilder: (_, index) => _listOfPages[index],
+                // shrinkWrap: true,
+                addAutomaticKeepAlives: true,
                 controller: controller,
                 scrollDirection: scrollDirection,
-                children: _listOfPages,
               ),
             ),
             SideBar(),

@@ -21,7 +21,8 @@ class Experiences extends StatefulWidget {
   _ExperiencesState createState() => _ExperiencesState();
 }
 
-class _ExperiencesState extends State<Experiences> {
+class _ExperiencesState extends State<Experiences>
+    with AutomaticKeepAliveClientMixin {
   final AsyncMemoizer _memoizer = AsyncMemoizer();
   ExpData expData;
   ExperienceWidget currentExp = ExperienceWidget(
@@ -38,16 +39,14 @@ class _ExperiencesState extends State<Experiences> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  @override
+  void updateKeepAlive() {}
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
     return Container(
       height: 700,
       // decoration: BoxDecoration(color: Colors.purple),
@@ -181,8 +180,6 @@ class ExpTextButton extends StatelessWidget {
               ))),
     );
   }
-
-
 }
 
 class ExperienceWidget extends StatelessWidget {
@@ -226,7 +223,9 @@ class ExperienceWidget extends StatelessWidget {
           timeline,
           style: theme.textTheme.headline4,
         ),
-        SizedBox(height: 20,),
+        SizedBox(
+          height: 20,
+        ),
       ];
 
       _achievements.forEach((achievement) {
@@ -266,7 +265,6 @@ class ExperienceWidget extends StatelessWidget {
         end: data.end,
         theme: Theme.of(context));
   }
-
 
   String convertTime(int milliseconds, {format: "MMMM yyyy"}) {
     var dt = DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);

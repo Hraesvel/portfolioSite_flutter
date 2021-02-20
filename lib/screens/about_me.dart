@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'about_me_builder_row.dart';
 import 'package:mustache_template/mustache_template.dart';
 import 'package:portfolio_site/utilities/common.dart';
 
+import 'about_me_builder_row.dart';
+
 class AboutMe extends StatefulWidget {
-  const AboutMe({Key key, @required this.info, @required this.templatePath, this.size})
+  const AboutMe(
+      {Key key, @required this.info, @required this.templatePath, this.size})
       : super(key: key);
 
   final Map info;
@@ -16,8 +18,7 @@ class AboutMe extends StatefulWidget {
   _AboutMeState createState() => _AboutMeState();
 }
 
-class _AboutMeState extends State<AboutMe> {
-
+class _AboutMeState extends State<AboutMe> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -25,39 +26,47 @@ class _AboutMeState extends State<AboutMe> {
 
   @override
   Widget build(BuildContext context) {
-      return FutureBuilder(
-          future: _constructAboutMe(),
-          builder: (BuildContext context, AsyncSnapshot snapshot, ) {
-            if (snapshot.hasData) {
-              return AboutMeBuilder(aboutMeText: snapshot.data, size: widget.size,);
-            }
-            return Container(
-              height: 900,
-              child: Center(
-                child: SizedBox(
-                  child: Text("Fetching Data..."),
-                  width: 60,
-                  height: 60,
-                ),
-              ),
+    return FutureBuilder(
+        future: _constructAboutMe(),
+        builder: (
+          BuildContext context,
+          AsyncSnapshot snapshot,
+        ) {
+          if (snapshot.hasData) {
+            return AboutMeBuilder(
+              aboutMeText: snapshot.data,
+              size: widget.size,
             );
-          });}
+          }
+          return Container(
+            height: 900,
+            child: Center(
+              child: SizedBox(
+                child: Text("Fetching Data..."),
+                width: 60,
+                height: 60,
+              ),
+            ),
+          );
+        });
+  }
 
   //Todo: Load from a S3 bucket.
   Future<String> _constructAboutMe() async {
     String result = await CommonUtility.loadStringAsset(widget.templatePath);
     return Template(result).renderString(widget.info);
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class AboutMeBuilder extends StatelessWidget {
   final Size size;
 
-  AboutMeBuilder({
-    Key key,
-    @required this.aboutMeText,
-    this.size
-  }) : super(key: key);
+  AboutMeBuilder({Key key, @required this.aboutMeText, this.size})
+      : super(key: key);
 
   final String aboutMeText;
 
@@ -75,8 +84,8 @@ class AboutMeBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 900,
-      padding: EdgeInsets.only(top: 80, bottom: 80),
+        height: 900,
+        padding: EdgeInsets.only(top: 80, bottom: 80),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -111,7 +120,8 @@ class AboutMeBuilder extends StatelessWidget {
                       SizedBox(
                         height: 25,
                       ),
-                      Container(child: Text("Here are the languages I work in:")),
+                      Container(
+                          child: Text("Here are the languages I work in:")),
                       AboutMeSkillSet(skill: skills),
                     ],
                   ),

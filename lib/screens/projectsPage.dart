@@ -3,6 +3,7 @@ import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:portfolio_site/access.dart';
 import 'about_me_builder_row.dart';
 import 'package:portfolio_site/types/types.dart';
@@ -20,22 +21,20 @@ class Projects extends StatefulWidget {
   _ProjectsState createState() => _ProjectsState();
 }
 
-class _ProjectsState extends State<Projects> {
-  ProjectData projects;
-  final AsyncMemoizer _memoizer = AsyncMemoizer();
 
+class _ProjectsState extends State<Projects> with AutomaticKeepAliveClientMixin{
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+  ProjectData projects;
   Widget fp;
   Widget bp;
 
   @override
-  void initState() {
-    super.initState();
-  }
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   @override
-  void dispose() {
-    this.projects = null;
-    super.dispose();
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -46,14 +45,14 @@ class _ProjectsState extends State<Projects> {
       child: Column(
         children: [
           // Frontend Projects
-          FutureBuilder(
+          fp == null ? FutureBuilder(
             future: _getProjectData(),
             builder:
                 (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData && fp == null) {
                 constructFrontend();
               } else {
-                this.fp = Container(
+                return Container(
                   height: 500,
                   child: Column(children: [
                     const Padding(
@@ -65,15 +64,15 @@ class _ProjectsState extends State<Projects> {
               }
               return this.fp;
             },
-          ),
+          ) : fp,
           // Backend Projects
-          FutureBuilder(
+          bp == null ? FutureBuilder(
               future: _getProjectData(),
               builder: (BuildContext context, AsyncSnapshot snapShot) {
-                if (snapShot.hasData) {
+                if (snapShot.hasData && bp == null) {
                   constructBackend();
                 } else {
-                  this.bp = Container(
+                  return Container(
                     height: 500,
                     child: Column(children: [
                       SizedBox(
@@ -89,7 +88,7 @@ class _ProjectsState extends State<Projects> {
                   );
                 }
                 return this.bp;
-              })
+              }) : bp
         ],
       ),
     );
@@ -194,6 +193,8 @@ class _ProjectsState extends State<Projects> {
       children: children,
     );
   }
+
+
 }
 
 class FrontendWidget extends StatelessWidget {
