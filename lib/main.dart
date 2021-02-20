@@ -88,10 +88,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   IconButton(
                       icon: Icon(Icons.menu),
-                      onPressed: () {
-                        debugPrint("opening Drawer");
-                        Scaffold.of(context).openDrawer();
-                      }),
+                      onPressed: () => Scaffold.of(context).openDrawer()),
                 ],
               )
             : Wrap(
@@ -233,50 +230,10 @@ class _HomeState extends State<Home> {
     if (_actionButtons == null) {
       var dur = Duration(milliseconds: 200);
       _actionButtons = [
-        TextButton(
-          onPressed: () async => await _scrollToIndex(1),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("About Me",
-                style: TextStyle(
-                    fontSize: 14.0,
-                    color: Color(0xffeb3575),
-                    fontWeight: FontWeight.w100)),
-          ),
-        ),
-        TextButton(
-          onPressed: () async => await _scrollToIndex(2),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Experiences",
-                style: TextStyle(
-                    fontSize: 14.0,
-                    color: Color(0xffeb3575),
-                    fontWeight: FontWeight.w100)),
-          ),
-        ),
-        TextButton(
-          onPressed: () async => await _scrollToIndex(3),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Projects",
-                style: TextStyle(
-                    fontSize: 14.0,
-                    color: Color(0xffeb3575),
-                    fontWeight: FontWeight.w100)),
-          ),
-        ),
-        TextButton(
-          onPressed: () async => await _scrollToIndex(4),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Contact Me",
-                style: TextStyle(
-                    fontSize: 14.0,
-                    color: Color(0xffeb3575),
-                    fontWeight: FontWeight.w100)),
-          ),
-        ),
+        _textActionButton(() => _scrollToIndex(1), text: "About Me"),
+        _textActionButton(() => _scrollToIndex(2), text: "Experiences"),
+        _textActionButton(() => _scrollToIndex(3), text: "Projects"),
+        _textActionButton(() => _scrollToIndex(4), text: "Contact Me"),
         TextButton(
           onPressed: () => launch(
               Uri.parse("assets/assets/static/Martin_Backend_Engineer.pdf")
@@ -334,13 +291,29 @@ class _HomeState extends State<Home> {
     // WidgetsBinding.instance.addObserver(ResizeObserver(_rebuildScrollPosition));
   }
 
+  Widget _textActionButton(Future<void> Function() fn, {text: "blank"} ) {
+    return TextButton(
+      onPressed: () async => fn(),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(text,
+            style: TextStyle(
+                fontSize: 14.0,
+                color: Color(0xffeb3575),
+                fontWeight: FontWeight.w100)),
+      ),
+    );
+
+  }
+
   void _rebuildScrollPosition() {
     setState(() {
       print("unimplemented!");
     });
   }
 
-  Future _scrollToIndex(int i) async {
-    await controller.scrollToIndex(i, duration: scrollDuration);
+  Future<void> _scrollToIndex(int index) async {
+    await controller.scrollToIndex(index, duration: scrollDuration);
+    await controller.scrollToIndex(index, duration: scrollDuration);
   }
 }
