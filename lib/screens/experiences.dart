@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:portfolio_site/app_level/assets/assets.dart';
 import 'package:portfolio_site/types/types.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -251,8 +252,7 @@ class _ExperiencesState extends State<Experiences>
               ),
               currentExp,
               TextButton(
-                  onPressed: () => launch(Uri.parse(
-                          "assets/assets/static/Martin_Backend_Engineer.pdf")
+                  onPressed: () => launch(Uri.parse(WebAssets.resume)
                       .toString()),
                   child: Container(
                     height: 60,

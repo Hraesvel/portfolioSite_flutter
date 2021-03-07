@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:portfolio_site/side_bar.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/link.dart';
 import 'package:portfolio_site/app_level/styles/theme.dart';
+import 'package:portfolio_site/app_level/assets/assets.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 // exports for screens directory
 import 'screens.dart';
 
 void main() {
+  setPathUrlStrategy();
   runApp(
     MaterialApp(
       title: "Martin's Portfolio",
@@ -69,23 +72,25 @@ class Footer extends StatelessWidget {
       margin: EdgeInsets.only(top: 32, bottom: 64),
       height: 80,
       decoration: BoxDecoration(color: Colors.transparent),
-      child: Column(
-        children: [
-          Text(
-            "© Martin Smith 2021",
-            textAlign: TextAlign.center,
-            style:
-                TextStyle(color: Theme.of(context).accentColor.withOpacity(.6)),
-          ),
-          TextButton(
-            onPressed: () => showAboutDialog(
-              context: context,
-              applicationVersion: '0.0.1',
-              applicationLegalese: '',
+      child: Center(
+        child: Column(
+          children: [
+            Text(
+              "© Martin Smith 2021",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Theme.of(context).accentColor.withOpacity(.6)),
             ),
-            child: Text("About"),
-          ),
-        ],
+            TextButton(
+              onPressed: () => showAboutDialog(
+                context: context,
+                applicationVersion: '0.0.2',
+                applicationLegalese: '',
+              ),
+              child: Text("About"),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -114,13 +119,14 @@ class _HomeState extends State<Home> {
 
   AutoScrollController controller;
   final Axis scrollDirection = Axis.vertical;
+  final Duration scrollDuration = Duration(milliseconds: 1600);
 
   List<Widget> _actionButtons;
   List<Widget> _pages;
 
   List<Widget> _listOfPages;
 
-  Duration scrollDuration = Duration(milliseconds: 800);
+  var _listView;
 
   @override
   Widget build(BuildContext context) {
@@ -157,13 +163,24 @@ class _HomeState extends State<Home> {
             // Container(
             //   height: 1000,
             // ),
+            // Padding(
+            //   padding: CommonWidgets.defaultEdgeInset(context),
+            //   child: _listView ??= ListView.builder(
+            //     itemCount: _listOfPages.length,
+            //     itemBuilder: (_, index) => _listOfPages[index],
+            //     // shrinkWrap: true,
+            //     addAutomaticKeepAlives: true,
+            //     controller: controller,
+            //     scrollDirection: scrollDirection,
+            //   ),
+            // ),
             Padding(
               padding: CommonWidgets.defaultEdgeInset(context),
-              child: ListView.builder(
-                itemCount: _listOfPages.length,
-                itemBuilder: (_, index) => _listOfPages[index],
-                // shrinkWrap: true,
-                addAutomaticKeepAlives: true,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _listOfPages,
+                ),
                 controller: controller,
                 scrollDirection: scrollDirection,
               ),
@@ -177,55 +194,29 @@ class _HomeState extends State<Home> {
 
   @override
   void didChangeDependencies() {
-    if (controller == null)
-      controller = AutoScrollController(
-          axis: scrollDirection,
-          viewportBoundaryGetter: () =>
-              Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom));
+    controller ??= AutoScrollController(
+        axis: scrollDirection,
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom));
 
-    if (_actionButtons == null) {
-      var dur = Duration(milliseconds: 200);
-      _actionButtons = [
-        _textActionButton(() => _scrollToIndex(1), text: "About Me"),
-        _textActionButton(() => _scrollToIndex(2), text: "Experiences"),
-        _textActionButton(() => _scrollToIndex(3), text: "Projects"),
-        _textActionButton(() => _scrollToIndex(4), text: "Contact Me"),
-        TextButton(
-          onPressed: () => launch(
-              Uri.parse("assets/assets/static/Martin_Backend_Engineer.pdf")
-                  .toString()),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Resume",
-                style: TextStyle(
-                    fontSize: 14.0,
-                    color: Color(0xffeb3575),
-                    fontWeight: FontWeight.w100)),
-          ),
-        ),
-      ];
-    }
-
-    if (_pages == null) {
-      _pages = [
-        Introduction(
-          info: info,
-          size: MediaQuery.of(context).size,
-        ),
-        AboutMe(
-          info: info,
-          templatePath: "assets/text_template/about_me.mustache",
-          size: MediaQuery.of(context).size,
-        ),
-        Experiences(
-          size: MediaQuery.of(context).size,
-        ),
-        Projects(
-          size: MediaQuery.of(context).size,
-        ),
-        ContactMe(),
-      ];
-    }
+    _pages ??= [
+      Introduction(
+        info: info,
+        size: MediaQuery.of(context).size,
+      ),
+      AboutMe(
+        info: info,
+        templatePath: "assets/text_template/about_me.mustache",
+        size: MediaQuery.of(context).size,
+      ),
+      Experiences(
+        size: MediaQuery.of(context).size,
+      ),
+      Projects(
+        size: MediaQuery.of(context).size,
+      ),
+      ContactMe(),
+    ];
 
     if (_listOfPages == null)
       _listOfPages = _pages
@@ -244,10 +235,33 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
+    _actionButtons ??= _actionButtons = [
+      _textActionButton(() => _scrollToIndex(1), text: "About Me"),
+      _textActionButton(() => _scrollToIndex(2), text: "Experiences"),
+      _textActionButton(() => _scrollToIndex(3), text: "Projects"),
+      _textActionButton(() => _scrollToIndex(4), text: "Contact Me"),
+      Link(
+          uri: Uri.parse(WebAssets.resume),
+          target: LinkTarget.blank,
+          builder: (_, followLink) => TextButton(
+                //Resume
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Resume",
+                      style: TextStyle(
+                          fontSize: 14.0,
+                          color: Color(0xffeb3575),
+                          fontWeight: FontWeight.w100)),
+                ),
+                onPressed: () => followLink(),
+              )),
+    ];
+
     // WidgetsBinding.instance.addObserver(ResizeObserver(_rebuildScrollPosition));
   }
 
-  Widget _textActionButton(Future<void> Function() fn, {text: "blank"} ) {
+  Widget _textActionButton(Future<void> Function() fn, {text: "blank"}) {
     return TextButton(
       onPressed: () async => fn(),
       child: Padding(
@@ -259,17 +273,22 @@ class _HomeState extends State<Home> {
                 fontWeight: FontWeight.w100)),
       ),
     );
-
   }
 
   void _rebuildScrollPosition() {
     setState(() {
-      print("unimplemented!");
+      // _listView = ListView.builder(
+      //   itemCount: _listOfPages.length,
+      //   itemBuilder: (_, index) => _listOfPages[index],
+      //   // shrinkWrap: true,
+      //   addAutomaticKeepAlives: true,
+      //   controller: controller,
+      //   scrollDirection: scrollDirection,
+      // );
     });
   }
 
   Future<void> _scrollToIndex(int index) async {
-    await controller.scrollToIndex(index, duration: scrollDuration);
     await controller.scrollToIndex(index, duration: scrollDuration);
   }
 }

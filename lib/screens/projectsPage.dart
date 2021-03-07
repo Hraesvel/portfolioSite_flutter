@@ -3,15 +3,17 @@ import 'dart:html';
 
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:portfolio_site/access.dart';
+import 'package:portfolio_site/app_level/access/access.dart';
 import 'package:portfolio_site/types/types.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'about_me_builder_row.dart';
+import 'package:portfolio_site/main.dart';
 
 class BackendWidget extends StatelessWidget {
   final Project project;
@@ -19,15 +21,78 @@ class BackendWidget extends StatelessWidget {
   final String name;
 
   final Size size;
+  final _cardColor;
+
+  final int maxLength = 135;
 
   // final String? image;
 
-  BackendWidget(this.project, {Key key, this.size = const Size(25, 25)})
-      : this.priority = project.priority,
+  BackendWidget(this.project,
+      {Key key,
+      this.size = const Size(25, 25),
+      cardColor: const Color(0xff102646)})
+      : this._cardColor = cardColor,
+        this.priority = project.priority,
         this.name = project.name;
 
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+
+    String tech = this.project.tech.toString();
+
+    FrontendReadMore readMoreWidget = FrontendReadMore(
+        mq: mediaQuery,
+        name: name,
+        project: project,
+        techStack: "Tech: ${tech.substring(1, tech.length - 1)}");
+
+    Widget techStack = Text(tech.substring(1, tech.length - 1));
+
+    TapGestureRecognizer tap = TapGestureRecognizer();
+    tap.onTap = () {
+      showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+          backgroundColor: _cardColor,
+          children: [readMoreWidget],
+        ),
+      );
+    };
+
+    if (this.project.tech.length > 4) {
+      var showTech = this.project.tech.sublist(0, 3).toString();
+      techStack = RichText(
+        text: TextSpan(children: [
+          TextSpan(
+              text: "Tech: ${showTech.substring(1, showTech.length - 1)}",
+              style: Theme.of(context).textTheme.bodyText2),
+          TextSpan(
+              text: "...read more",
+              recognizer: tap,
+              style: Theme.of(context).textTheme.button)
+        ]),
+      );
+    }
+
+    bool isOverflow = project.description.length > maxLength;
+
+    var spans = [
+      TextSpan(
+          text: isOverflow
+              ? project.description.substring(0, maxLength)
+              : project.description)
+    ];
+    if (isOverflow)
+      spans.add(TextSpan(
+          text: "...read more",
+          recognizer: tap,
+          style: Theme.of(context).textTheme.button));
+
+    var description = RichText(
+        text: TextSpan(
+            children: spans, style: Theme.of(context).textTheme.bodyText2));
+
     List<Widget> children = [
       Text(
         this.name,
@@ -36,37 +101,95 @@ class BackendWidget extends StatelessWidget {
       Spacer(
         flex: 2,
       ),
-      Text(
-        this.project.description,
-        style: Theme.of(context).textTheme.bodyText2,
-      ),
+      description,
       Spacer(
         flex: 1,
       ),
-      Text(
-        this.project.tech.toString(),
-        style: Theme.of(context).textTheme.bodyText2,
-      ),
+      techStack,
       Spacer(
         flex: 5,
       ),
-      TextButton(
-          onPressed: () => launch(this.project.link),
-          child: Text(
-            "View on Github ->",
-            style: Theme.of(context).textTheme.button,
-          ))
+      CommonUtility.simpleTextButton(
+          uri: this.project.link, text: "View on Github ->")
+      // TextButton(
+      //     onPressed: () => launch(this.project.link),
+      //     child: Text(
+      //       "View on Github ->",
+      //       style: Theme.of(context).textTheme.button,
+      //     ))
     ];
 
     return Container(
       height: 8,
       width: 16,
-      decoration: BoxDecoration(color: Color(0xff102646)),
+      decoration: BoxDecoration(color: _cardColor),
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: children,
+        ),
+      ),
+    );
+  }
+}
+
+class FrontendReadMore extends StatelessWidget {
+  const FrontendReadMore({
+    Key key,
+    @required this.mq,
+    @required this.name,
+    @required this.project,
+    @required this.techStack,
+  }) : super(key: key);
+
+  final MediaQueryData mq;
+  final String name;
+  final Project project;
+  final String techStack;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: mq.size.height > 500 ? 450 : mq.size.height,
+      width: mq.size.width > 800 ? 400 : mq.size.width * .8,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              this.name,
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              height: 250,
+              child: Scrollbar(
+                  child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Text(
+                    this.project.description,
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                ],
+              )),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Text(
+              "Tech Stack:",
+              textAlign: TextAlign.left,
+            ),
+            Text(techStack, style: Theme.of(context).textTheme.bodyText2),
+            Spacer(
+              flex: 1,
+            )
+          ],
         ),
       ),
     );
@@ -84,7 +207,7 @@ class FrontendWidget extends StatelessWidget {
     @required this.project,
   })  : priority = project.priority,
         name = project.name,
-        image = "$S3ACCESS/${project.bucket}/${project.image}",
+        image = "${Access.s3}/${project.bucket}/${project.image}",
         super(key: key);
 
   @override
@@ -106,19 +229,15 @@ class FrontendWidget extends StatelessWidget {
       ));
     }
 
-    textBody.add(Spacer(
-      flex: 1,
-    ));
-    textBody.add(TextButton(
-      child: Text(
-        "View on Github ->",
-        style: Theme.of(context).textTheme.button,
-      ),
-      onPressed: () => launch(project.link),
-    ));
-    textBody.add(Spacer(
-      flex: 1,
-    ));
+    textBody
+      ..add(Spacer(
+        flex: 1,
+      ))
+      ..add(CommonUtility.simpleTextButton(
+          uri: this.project.link, text: "View on Github ->"))
+      ..add(Spacer(
+        flex: 1,
+      ));
 
     var fadeInImage = FadeInImage.memoryNetwork(
       imageScale: 0.95,
@@ -130,11 +249,8 @@ class FrontendWidget extends StatelessWidget {
     var children = [
       MaterialButton(
         child: Container(
-          constraints: BoxConstraints(
-              // minWidth: 128,
-              // minHeight: 128,
-              maxHeight: 321 * 0.7,
-              maxWidth: 516 * 0.7),
+          constraints:
+              BoxConstraints(maxHeight: 321 * 0.7, maxWidth: 516 * 0.7),
           decoration: BoxDecoration(
               color: Color(0xff081F41),
               border: Border.all(
@@ -186,76 +302,82 @@ class Projects extends StatefulWidget {
 }
 
 class _ProjectsState extends State<Projects>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin<Projects> {
   final AsyncMemoizer _memoizer = AsyncMemoizer();
   ProjectData projects;
   Widget fp;
   Widget bp;
 
+  bool keepAlive = true;
+
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => keepAlive;
+
+  @override
+  void updateKeepAlive() => setState(() => keepAlive = !keepAlive);
+
+  void _rebuildGrid() {
+    print("hello");
+  }
 
   @override
   Widget build(BuildContext context) {
-    // constructFrontend();
+    super.build(context);
+
     return Container(
       // height: 1800,
       child: Column(
         children: [
           // Frontend Projects
-          fp == null
-              ? FutureBuilder(
-                  future: _getProjectData(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData && fp == null) {
-                      constructFrontend();
-                    } else {
-                      return Container(
-                        height: 500,
-                        child: Column(children: [
-                          const Padding(
-                            padding: EdgeInsets.only(top: 16),
-                            child: Text('Awaiting result...'),
-                          )
-                        ]),
-                      );
-                    }
-                    return this.fp;
-                  },
-                )
-              : fp,
+          FutureBuilder(
+            future: _getProjectData(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                _constructFrontend();
+              } else {
+                return Container(
+                  height: 500,
+                  child: Column(children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Awaiting result...'),
+                    )
+                  ]),
+                );
+              }
+              return this.fp;
+            },
+          ),
           // Backend Projects
-          bp == null
-              ? FutureBuilder(
-                  future: _getProjectData(),
-                  builder: (BuildContext context, AsyncSnapshot snapShot) {
-                    if (snapShot.hasData && bp == null) {
-                      constructBackend();
-                    } else {
-                      return Container(
-                        height: 500,
-                        child: Column(children: [
-                          SizedBox(
-                            child: CircularProgressIndicator(),
-                            width: 60,
-                            height: 60,
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 16),
-                            child: Text('Awaiting result...'),
-                          )
-                        ]),
-                      );
-                    }
-                    return this.bp;
-                  })
-              : bp
+          FutureBuilder(
+              future: _getProjectData(),
+              builder: (BuildContext context, AsyncSnapshot snapShot) {
+                if (snapShot.hasData) {
+                  _constructBackend();
+                } else {
+                  return Container(
+                    height: 500,
+                    child: Column(children: [
+                      SizedBox(
+                        child: CircularProgressIndicator(),
+                        width: 60,
+                        height: 60,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: Text('Awaiting result...'),
+                      )
+                    ]),
+                  );
+                }
+                return this.bp;
+              })
         ],
       ),
     );
   }
 
-  void constructBackend() {
+  void _constructBackend() {
     List<Widget> children = [
       Padding(
         padding: const EdgeInsets.only(bottom: 50),
@@ -266,21 +388,20 @@ class _ProjectsState extends State<Projects>
       ),
     ];
 
-    List<BackendWidget> prjList = [];
+    var size = Size(40, 30);
 
-    var size = Size(40, 25);
-
-    for (Project prj in this.projects.backend) {
-      prjList.add(BackendWidget(
-        prj,
-        size: size,
-      ));
-    }
-
-    if (prjList.isNotEmpty)
+    if (this.projects.backend.isNotEmpty)
       children.add(GridView(
         shrinkWrap: true,
-        children: prjList,
+        reverse: true,
+        children: this
+            .projects
+            .backend
+            .map((prj) => BackendWidget(
+                  prj,
+                  size: size,
+                ))
+            .toList(),
         addRepaintBoundaries: false,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: MediaQuery.of(context).size.width > 800 ? 2 : 1,
@@ -295,7 +416,7 @@ class _ProjectsState extends State<Projects>
     );
   }
 
-  void constructFrontend() {
+  void _constructFrontend() {
     List<Widget> content = [
       Padding(
         padding: const EdgeInsets.only(bottom: 50),
@@ -323,6 +444,8 @@ class _ProjectsState extends State<Projects>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(ResizeObserver(updateKeepAlive));
+    // keepAlive = true;
   }
 
   /// Send a request to an Amazon S3 bucket relation to projects
@@ -330,33 +453,21 @@ class _ProjectsState extends State<Projects>
   /// the 'projects' field
   Future<dynamic> _getProjectData() async {
     return _memoizer.runOnce(() async {
-      if (this.projects != null) return this.projects;
+      if (projects != null) return projects;
 
-      var res = await CommonUtility.fetchFromS3(
-          bucket: "projects", file: "projects.json");
+      var res = await CommonUtility.fetchFromS3(file: "projects.json");
       if (res.statusCode == 200) {
         try {
-          // var bytes = res.body.codeUnits;
-          // Map<String, dynamic> out = JsonDecoder().convert(utf8.decode(bytes));
           Map<String, dynamic> out = JsonDecoder().convert(res.body);
-          this.projects = ProjectData.fromJson(out);
-          // debugPrint(this.projects.frontend.toString());
-          this
-              .projects
-              .frontend
-              .sort((a, b) => a.priority.compareTo(b.priority));
-          // debugPrint(this.projects.frontend.toString());
 
-          this
-              .projects
-              .backend
-              .sort((a, b) => a.priority.compareTo(b.priority));
+          // Convert Json to Object
+          projects = ProjectData.fromJson(out);
+          projects.sortProjects(reverseBackend: true);
         } catch (e) {
-          print("whoops");
-          // debugPrint(e.toString());
+          print(e.toString());
         }
       }
-      return this.projects;
+      return projects;
     });
   }
 }

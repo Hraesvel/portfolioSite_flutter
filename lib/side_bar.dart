@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SideBar extends StatelessWidget {
@@ -28,31 +29,39 @@ class SideBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                  icon: Icon(
-                    FontAwesome5.github_alt,
-                    color: Colors.white.withOpacity(0.9),
-                  ),
-                  onPressed: () {
-                    launch("https://github.com/ostoyae/");
-                  }),
-              IconButton(
-                  icon: Icon(FontAwesome5.linkedin_in),
-                  onPressed: () {
-                    launch("https://linkedin.com/in/rustyboy");
-                  }),
-              IconButton(
-                  icon: Icon(FontAwesome5.twitter),
-                  onPressed: () {
-                    launch("https://twitter.com/_ostoyae");
-                  }),
-              IconButton(
-                  icon: Icon(FontAwesome5.medium_m),
-                  onPressed: () {
-                    launch('https://medium.com/@Ostoyae');
-                  }),
+              createLinkedIcon(
+                  uri: "https://github.com/ostoyae/",
+                  icon: FontAwesome5.github_alt),
+
+              createLinkedIcon(
+                  uri: "https://linkedin.com/in/rustyboy",
+                  icon: FontAwesome5.linkedin_in),
+              createLinkedIcon(
+                  uri: "https://twitter.com/_ostoyae",
+                  icon: FontAwesome5.twitter),
+              createLinkedIcon(
+                  uri: "https://medium.com/@Ostoyae",
+                  icon: FontAwesome5.medium_m),
             ],
           ),
         ));
+  }
+
+  Widget createLinkedIcon(
+      {String uri,
+      LinkTarget target: LinkTarget.blank,
+      IconData icon,
+      Color color}) {
+    Link iconButton = Link(
+        uri: Uri.parse(uri),
+        target: target,
+        builder: (_, followLink) => IconButton(
+            icon: Icon(
+              icon,
+              color: color ?? Colors.white.withOpacity(0.9),
+            ),
+            onPressed: () => followLink()));
+
+    return iconButton;
   }
 }

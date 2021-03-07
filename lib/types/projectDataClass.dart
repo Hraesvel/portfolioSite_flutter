@@ -10,8 +10,20 @@ class ProjectData {
   List<Project> frontend = [];
   List<Project> backend = [];
 
-
-  factory ProjectData.fromJson(Map<String, dynamic> json) => _$ProjectDataFromJson(json);
+  factory ProjectData.fromJson(Map<String, dynamic> json) =>
+      _$ProjectDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProjectDataToJson(this);
+
+  void sortProjects({reverseFrontend: false, reverseBackend: false}) {
+    if (!reverseFrontend)
+      frontend.sort((a, b) => a.priority.compareTo(b.priority));
+    else
+      frontend.sort((a, b) => b.priority.compareTo(a.priority));
+
+    if (!reverseBackend)
+      backend.sort((a, b) => a.priority.compareTo(b.priority));
+    else
+      backend.sort((a, b) => b.priority.compareTo(a.priority));
+  }
 }

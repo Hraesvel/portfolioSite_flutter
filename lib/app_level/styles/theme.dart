@@ -12,6 +12,7 @@ class AppTheme {
     return ThemeData(
       brightness: Brightness.dark,
       primaryColor: Color(0xff0a192f),
+      cardColor: Color(0xff102646),
       accentColor: Color(0xffeb3575),
       primaryColorLight: lightBlue,
       textTheme: TextTheme(

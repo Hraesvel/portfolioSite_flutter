@@ -36,12 +36,13 @@ class AboutMeSkillSet extends StatelessWidget {
       }
       tally += depth;
       c1.add(Column(
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: s,
       ));
     }
 
     return Row(
-        // crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: c1);
   }
@@ -62,7 +63,7 @@ class ListItemSkill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 175,
+      width: 150,
       height: 30,
       child: ListTile(
         minLeadingWidth: minLeadingWidth,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mustache_template/mustache_template.dart';
+import 'package:portfolio_site/app_level/assets/assets.dart';
 import 'package:portfolio_site/utilities/common.dart';
 
 import 'about_me_builder_row.dart';
@@ -25,14 +26,12 @@ class AboutMeBuilder extends StatelessWidget {
   final String aboutMeText;
 
   final List<String> skills = [
-    "C 🌊",
+    "C",
     "Rust 🦀",
     "Python 🐍",
     "Csharp 🌊#",
-    "Javascript 💁‍♂",
-    "Html & CSS 😭",
+    "Html & CSS",
     "Flutter 🦋",
-    "React ☢",
   ];
 
   AboutMeBuilder({Key key, @required this.aboutMeText, this.size})
@@ -40,6 +39,42 @@ class AboutMeBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = [
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+              // body
+              height: 300,
+              constraints: BoxConstraints(maxWidth: 425, minWidth: 128),
+              width: MediaQuery.of(context).size.width < 850
+                  ? null
+                  : (MediaQuery.of(context).size.width - 256) / 2,
+              child: Text(
+                aboutMeText,
+                style: Theme.of(context).textTheme.bodyText2,
+                textAlign: TextAlign.justify,
+              )
+              // Text(aboutMeText, style: Theme.of(context).textTheme.bodyText2,)
+              ),
+          SizedBox(
+            height: 25,
+          ),
+          Container(child: Text("Here are the languages I work in:")),
+          AboutMeSkillSet(skill: skills),
+        ],
+      ),
+      Container(
+        width: 292,
+        height: 292,
+        decoration: BoxDecoration(color: Colors.blueGrey),
+        child: Image(
+          image: WebAssets.imageMe,
+          // fit: BoxFit.fill,
+        ),
+      )
+    ];
+
     return Container(
         height: 900,
         padding: EdgeInsets.only(top: 80, bottom: 80),
@@ -55,44 +90,13 @@ class AboutMeBuilder extends StatelessWidget {
             ),
             Container(
               // width: 900,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          // body
-                          height: 300,
-                          constraints:
-                              BoxConstraints(maxWidth: 425, minWidth: 128),
-                          width: (MediaQuery.of(context).size.width - 256) / 2,
-                          child: SelectableText(
-                            aboutMeText,
-                            style: Theme.of(context).textTheme.bodyText2,
-                          )
-                          // Text(aboutMeText, style: Theme.of(context).textTheme.bodyText2,)
-                          ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      Container(
-                          child: Text("Here are the languages I work in:")),
-                      AboutMeSkillSet(skill: skills),
-                    ],
-                  ),
-                  Container(
-                    width: 292,
-                    height: 292,
-                    decoration: BoxDecoration(color: Colors.blueGrey),
-                    child: Image(
-                      image: AssetImage("assets/img/self_02.png"),
-                      fit: BoxFit.fill,
+              child: MediaQuery.of(context).size.width < 850
+                  ? children[0]
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: children,
                     ),
-                  )
-                ],
-              ),
             ),
             Spacer(flex: 1),
             Center(
@@ -145,7 +149,7 @@ class _AboutMeState extends State<AboutMe> with AutomaticKeepAliveClientMixin {
   }
 
   Future<String> _constructAboutMe() async {
-    String result = await CommonUtility.loadStringAsset(widget.templatePath);
+    String result = await CommonUtility.loadStringAsset(widget.templatePath)..trim();
     return Template(result).renderString(widget.info);
   }
 }

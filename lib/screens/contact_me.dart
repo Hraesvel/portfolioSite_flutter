@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:portfolio_site/app_level/assets/assets.dart';
 import 'package:portfolio_site/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,23 +38,54 @@ class ContactMe extends StatelessWidget {
           Spacer(
             flex: 1,
           ),
-          TextButton(
-              onPressed: () => launch(
-                  Uri.parse("assets/assets/static/Martin_Backend_Engineer.pdf")
-                      .toString()),
-              child: Container(
-                height: 60,
-                width: 128,
-                alignment: Alignment.center,
-                child:
-                    Text("Resume", style: Theme.of(context).textTheme.button),
-                decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(
-                        width: 1,
-                        color:
-                            Theme.of(context).accentColor.withOpacity(0.40))),
-              )),
+          SizedBox(
+            width: 500,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      Uri emailMe = Uri(
+                          scheme: "mailto",
+                          path: "mcodesmith@gmail.com",
+                          queryParameters: {'subject': 'Greetings'});
+
+                      launch(emailMe.toString());
+                    },
+                    child: Container(
+                      height: 60,
+                      width: 128,
+                      alignment: Alignment.center,
+                      child: Text("Contact Me",
+                          style: Theme.of(context).textTheme.button),
+                      decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: Border.all(
+                              width: 1,
+                              color:
+                              Theme.of(context).accentColor.withOpacity(0.40))),
+                    )),
+                TextButton(
+                    onPressed: () => launch(
+                        Uri.parse(WebAssets.resume)
+                            .toString()),
+                    child: Container(
+                      height: 60,
+                      width: 128,
+                      alignment: Alignment.center,
+                      child:
+                          Text("Resume", style: Theme.of(context).textTheme.button),
+                      decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: Border.all(
+                              width: 1,
+                              color:
+                                  Theme.of(context).accentColor.withOpacity(0.40))),
+                    )),
+              ],
+            ),
+          ),
           Spacer(
             flex: 5,
           ),

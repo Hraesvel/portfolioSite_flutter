@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:portfolio_site/access.dart';
+import 'package:portfolio_site/app_level/access/access.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/link.dart';
 
 class CommonUtility {
   static Future<String> loadStringAsset(String path) async {
@@ -18,8 +20,20 @@ class CommonUtility {
     String ep = "";
     ep += bucket == "" || bucket == null ? "" : "/$bucket";
     ep += file == "" || file == null ? "" : "/$file";
-    final res = await http.get("$S3ACCESS$ep");
+    final res = await http.get("${Access.s3}$ep");
     return res;
+  }
+
+  static Widget simpleTextButton({String uri, String text, TextTheme textTheme, Widget child}) {
+    return Link(
+        uri: Uri.parse(uri),
+        target: LinkTarget.blank,
+        builder: (context, followLink) => TextButton(
+            onPressed: () => followLink(),
+            child: child ?? Text(
+              text,
+              style: textTheme ?? Theme.of(context).textTheme.button,
+            )));
   }
 }
 
@@ -32,9 +46,9 @@ class CommonWidgets {
 
     var curWidth = MediaQuery.of(context).size.width;
 
-    if (curWidth >= 1024 ) {
-      var s = (curWidth - pageWidth)  ;
-      edge = s /2 ;
+    if (curWidth >= 1024) {
+      var s = (curWidth - pageWidth);
+      edge = s / 2;
     }
     edgeInset = EdgeInsets.only(
       left: left ?? edge,
