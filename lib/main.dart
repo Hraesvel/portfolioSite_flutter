@@ -276,16 +276,7 @@ class _HomeState extends State<Home> {
   }
 
   void _rebuildScrollPosition() {
-    setState(() {
-      // _listView = ListView.builder(
-      //   itemCount: _listOfPages.length,
-      //   itemBuilder: (_, index) => _listOfPages[index],
-      //   // shrinkWrap: true,
-      //   addAutomaticKeepAlives: true,
-      //   controller: controller,
-      //   scrollDirection: scrollDirection,
-      // );
-    });
+    setState(() {});
   }
 
   Future<void> _scrollToIndex(int index) async {
