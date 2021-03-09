@@ -21,7 +21,7 @@ class AboutMeSkillSet extends StatelessWidget {
     List<Widget> c1 = [];
     int tally = 1;
 
-    for (int i = 0; i < rows; i++) {
+    for (int i = 0; i < rows && tally <= skill.length; i++) {
       List<Widget> s = [];
 
       for (int j = tally; j < depth + tally; j++) {
@@ -36,7 +36,6 @@ class AboutMeSkillSet extends StatelessWidget {
       }
       tally += depth;
       c1.add(Column(
-        // crossAxisAlignment: CrossAxisAlignment.start,
         children: s,
       ));
     }
@@ -55,7 +54,7 @@ class ListItemSkill extends StatelessWidget {
 
   const ListItemSkill(
       {Key key,
-      this.leading: "🤦‍",
+      this.leading: "->",
       this.title: "unknown",
       this.minLeadingWidth: 12})
       : super(key: key);
@@ -69,10 +68,13 @@ class ListItemSkill extends StatelessWidget {
         minLeadingWidth: minLeadingWidth,
         contentPadding: EdgeInsets.all(0),
         leading: Text(
-          "$leading.",
+          "$leading",
           style: TextStyle(color: Theme.of(context).accentColor),
         ),
-        title: Text(title, style: Theme.of(context).textTheme.bodyText2,),
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.bodyText2,
+        ),
       ),
     );
   }
