@@ -32,7 +32,7 @@ class Introduction extends StatelessWidget {
           ),
           Container(
             width: 400,
-            child: Text(
+            child: SelectableText(
               "I'm a full-stack software engineer based in ${this.info['resident']} with experience in frontend with Flutter and React, and backend development using Python, Rust.",
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.bodyText1,

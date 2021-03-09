@@ -87,7 +87,7 @@ class Footer extends StatelessWidget {
                 applicationVersion: '0.0.2',
                 applicationLegalese: '',
               ),
-              child: Text("About"),
+              child: SelectableText("About"),
             ),
           ],
         ),
@@ -160,20 +160,6 @@ class _HomeState extends State<Home> {
         color: Color(0xff0a192f),
         child: Stack(
           children: [
-            // Container(
-            //   height: 1000,
-            // ),
-            // Padding(
-            //   padding: CommonWidgets.defaultEdgeInset(context),
-            //   child: _listView ??= ListView.builder(
-            //     itemCount: _listOfPages.length,
-            //     itemBuilder: (_, index) => _listOfPages[index],
-            //     // shrinkWrap: true,
-            //     addAutomaticKeepAlives: true,
-            //     controller: controller,
-            //     scrollDirection: scrollDirection,
-            //   ),
-            // ),
             Padding(
               padding: CommonWidgets.defaultEdgeInset(context),
               child: SingleChildScrollView(
@@ -229,6 +215,26 @@ class _HomeState extends State<Home> {
               child: e.value))
           .toList();
 
+    _actionButtons ??= _actionButtons = [
+      _textActionButton(() => _scrollToIndex(1), text: "About Me", style: Theme.of(context).textTheme.button),
+      _textActionButton(() => _scrollToIndex(2), text: "Experiences", style: Theme.of(context).textTheme.button),
+      _textActionButton(() => _scrollToIndex(3), text: "Projects", style: Theme.of(context).textTheme.button),
+      _textActionButton(() => _scrollToIndex(4), text: "Contact Me", style: Theme.of(context).textTheme.button),
+      Link(
+          uri: Uri.parse(WebAssets.resume),
+          target: LinkTarget.blank,
+          builder: (_, followLink) => TextButton(
+            //Resume
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Resume",
+                  style: Theme.of(context).textTheme.button),
+            ),
+            onPressed: () => followLink(),
+          )),
+    ];
+
+
     super.didChangeDependencies();
   }
 
@@ -236,38 +242,17 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    _actionButtons ??= _actionButtons = [
-      _textActionButton(() => _scrollToIndex(1), text: "About Me"),
-      _textActionButton(() => _scrollToIndex(2), text: "Experiences"),
-      _textActionButton(() => _scrollToIndex(3), text: "Projects"),
-      _textActionButton(() => _scrollToIndex(4), text: "Contact Me"),
-      Link(
-          uri: Uri.parse(WebAssets.resume),
-          target: LinkTarget.blank,
-          builder: (_, followLink) => TextButton(
-                //Resume
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Resume",
-                      style: TextStyle(
-                          fontSize: 14.0,
-                          color: Color(0xffeb3575),
-                          fontWeight: FontWeight.w100)),
-                ),
-                onPressed: () => followLink(),
-              )),
-    ];
 
     // WidgetsBinding.instance.addObserver(ResizeObserver(_rebuildScrollPosition));
   }
 
-  Widget _textActionButton(Future<void> Function() fn, {text: "blank"}) {
+  Widget _textActionButton(Future<void> Function() fn, {text: "blank", TextStyle style}) {
     return TextButton(
       onPressed: () async => fn(),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(text,
-            style: TextStyle(
+            style: style ?? TextStyle(
                 fontSize: 14.0,
                 color: Color(0xffeb3575),
                 fontWeight: FontWeight.w100)),

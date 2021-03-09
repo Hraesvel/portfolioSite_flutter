@@ -50,12 +50,11 @@ class AboutMeBuilder extends StatelessWidget {
               width: MediaQuery.of(context).size.width < 850
                   ? null
                   : (MediaQuery.of(context).size.width - 256) / 2,
-              child: Text(
+              child: SelectableText(
                 aboutMeText,
                 style: Theme.of(context).textTheme.bodyText2,
                 textAlign: TextAlign.justify,
               )
-              // Text(aboutMeText, style: Theme.of(context).textTheme.bodyText2,)
               ),
           SizedBox(
             height: 25,

@@ -11,6 +11,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 # If modifying these scopes, delete the file token.pickle.
 from googleapiclient.discovery import build
 
+import boto3
+
 from model.projects import Frontend, Backend
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -20,7 +22,8 @@ SPREADSHEET_ID = '1qZiNdWzN2YFqzTkGktkv3Zvny9qm3uBd4tkkJpzSrCc'
 RANGE_NAME = 'A1:J'
 CRED_PATH = '../../../sheetsApiCreds/credentials.json'
 TOKEN_PATH = '../../../sheetsApiCreds/token.json'
-PROJECTS_JSON = '../assets/projects/projects.json'
+PROJECTS_JSON = ['../assets/projects/projects.json', './projects.json']
+
 # PROJECTS_JSON = './projects.json'
 
 
@@ -73,8 +76,9 @@ def main():
     # print(projects["frontend"])
 
     """write as bytes using 'wb+' """
-    with open(PROJECTS_JSON, 'wb+') as file:
-        file.write(json.dumps(projects, indent=2, ensure_ascii=False).encode('utf8'), )
+    for pjson in PROJECTS_JSON:
+        with open(pjson, 'wb+') as file:
+            file.write(json.dumps(projects, indent=2, ensure_ascii=False).encode('utf8'), )
 
 
 if __name__ == "__main__":
