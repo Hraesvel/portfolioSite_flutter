@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:portfolio_site/side_bar.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:url_launcher/link.dart';
 import 'package:portfolio_site/app_level/styles/theme.dart';
 import 'package:portfolio_site/app_level/assets/assets.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 // exports for screens directory
@@ -75,7 +75,7 @@ class Footer extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
-            Text(
+            SelectableText(
               "© Martin Smith 2021",
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -84,7 +84,7 @@ class Footer extends StatelessWidget {
             TextButton(
               onPressed: () => showAboutDialog(
                 context: context,
-                applicationVersion: '0.0.2',
+                applicationVersion: '0.0.3',
                 applicationLegalese: '',
               ),
               child: SelectableText("About"),
@@ -134,7 +134,7 @@ class _HomeState extends State<Home> {
       DrawerHeader(
         child: Padding(
           padding: const EdgeInsets.only(top: 12.0),
-          child: Text(
+          child: SelectableText(
             "Navigation",
             textAlign: TextAlign.center,
           ),
@@ -216,24 +216,24 @@ class _HomeState extends State<Home> {
           .toList();
 
     _actionButtons ??= _actionButtons = [
-      _textActionButton(() => _scrollToIndex(1), text: "About Me", style: Theme.of(context).textTheme.button),
-      _textActionButton(() => _scrollToIndex(2), text: "Experiences", style: Theme.of(context).textTheme.button),
-      _textActionButton(() => _scrollToIndex(3), text: "Projects", style: Theme.of(context).textTheme.button),
-      _textActionButton(() => _scrollToIndex(4), text: "Contact Me", style: Theme.of(context).textTheme.button),
-      Link(
-          uri: Uri.parse(WebAssets.resume),
-          target: LinkTarget.blank,
-          builder: (_, followLink) => TextButton(
-            //Resume
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Resume",
-                  style: Theme.of(context).textTheme.button),
-            ),
-            onPressed: () => followLink(),
-          )),
+      _textActionButton(() => _scrollToIndex(1),
+          text: "About Me", style: Theme.of(context).textTheme.button),
+      _textActionButton(() => _scrollToIndex(2),
+          text: "Experiences", style: Theme.of(context).textTheme.button),
+      _textActionButton(() => _scrollToIndex(3),
+          text: "Projects", style: Theme.of(context).textTheme.button),
+      _textActionButton(() => _scrollToIndex(4),
+          text: "Contact Me", style: Theme.of(context).textTheme.button),
+      TextButton(
+        //Resume
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Resume",
+              style: Theme.of(context).textTheme.button),
+        ),
+        onPressed: () => launch(Uri.parse(WebAssets.resume).toString())
+      ),
     ];
-
 
     super.didChangeDependencies();
   }
@@ -242,20 +242,21 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-
     // WidgetsBinding.instance.addObserver(ResizeObserver(_rebuildScrollPosition));
   }
 
-  Widget _textActionButton(Future<void> Function() fn, {text: "blank", TextStyle style}) {
+  Widget _textActionButton(Future<void> Function() fn,
+      {text: "blank", TextStyle style}) {
     return TextButton(
       onPressed: () async => fn(),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(text,
-            style: style ?? TextStyle(
-                fontSize: 14.0,
-                color: Color(0xffeb3575),
-                fontWeight: FontWeight.w100)),
+            style: style ??
+                TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xffeb3575),
+                    fontWeight: FontWeight.w100)),
       ),
     );
   }

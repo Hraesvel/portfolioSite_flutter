@@ -9,6 +9,7 @@ class Project {
       List<String> tech,
       name,
       description,
+      this.achievements,
       this.link,
       this.image,
       this.priority,
@@ -20,6 +21,8 @@ class Project {
   }
 
   int priority = 0;
+
+  List<String> achievements;
 
   @JsonKey(name: 'name')
   String _name;

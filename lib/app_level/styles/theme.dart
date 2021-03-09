@@ -17,9 +17,9 @@ class AppTheme {
       primaryColorLight: lightBlue,
       textTheme: TextTheme(
           headline1: TextStyle(
-              fontSize: 60.0,
+              fontSize: 68.0,
               color: lightBlue,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               fontFamily: string),
           headline2: TextStyle(
               fontSize: 38.0,
@@ -37,22 +37,24 @@ class AppTheme {
               fontWeight: FontWeight.w300,
               fontFamily: string),
           bodyText1: TextStyle(
-            fontSize: 18.0,
+            fontSize: 20.0,
+            height: 1.3,
             fontFamily: string,
             fontWeight: FontWeight.w400,
             color: lightBlue,
           ),
           bodyText2: TextStyle(
-            fontSize: 16.0,
+            fontSize: 18.0,
             fontFamily: string,
+            height: 1.4,
             fontWeight: FontWeight.w400,
             color: lightBlue,
           ),
           button: TextStyle(
-              fontFamily: string,
-              fontSize: 14.0,
+              fontFamily: 'RobotoMono',
+              fontSize: 16.0,
               color: Color(0xffeb3575),
-              fontWeight: FontWeight.w100)),
+              fontWeight: FontWeight.w400)),
     );
   }
 }

@@ -20,7 +20,7 @@ class ContactMe extends StatelessWidget {
           Spacer(
             flex: 2,
           ),
-          Text(
+          SelectableText(
             "Contact me",
             style: Theme.of(context).textTheme.headline2,
           ),
@@ -29,7 +29,7 @@ class ContactMe extends StatelessWidget {
           ),
           SizedBox(
             width: 450,
-            child: Text(
+            child: SelectableText(
               "Thanks for visiting my site. I’d love to hear from you. Feel free to drop me a line or to connect with me on social media. Cheers!",
               style: Theme.of(context).textTheme.bodyText2,
               textAlign: TextAlign.center,
@@ -57,7 +57,7 @@ class ContactMe extends StatelessWidget {
                       height: 60,
                       width: 128,
                       alignment: Alignment.center,
-                      child: Text("Contact Me",
+                      child: SelectableText("Contact Me",
                           style: Theme.of(context).textTheme.button),
                       decoration: BoxDecoration(
                           color: Colors.transparent,

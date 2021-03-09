@@ -15,14 +15,15 @@ class Introduction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 120),
-      height: 700,
+      // padding: EdgeInsets.only(top: 120),
+      height: 900,
       // decoration: BoxDecoration(color: Colors.purple.withOpacity(.2)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Spacer(flex: 1,),
           // SizedBox(height: 120),
-          Text(
+          SelectableText(
             "Hello, I'm Martin Smith",
             textAlign: TextAlign.start,
             style: Theme.of(context).textTheme.headline1,
@@ -31,9 +32,9 @@ class Introduction extends StatelessWidget {
             height: 32,
           ),
           Container(
-            width: 400,
+            width: 500,
             child: SelectableText(
-              "I'm a full-stack software engineer based in ${this.info['resident']} with experience in frontend with Flutter and React, and backend development using Python, Rust.",
+              "I'm a full-stack software engineer based in ${this.info['resident']} with experience in frontend with Flutter, and backend development using Python, Rust.",
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.bodyText1,
             ),
@@ -64,14 +65,14 @@ class Introduction extends StatelessWidget {
                             Theme.of(context).accentColor.withOpacity(0.40))),
               )),
           Spacer(flex: 1,),
-          Center(
-              child: SizedBox(
-                  width: 180,
-                  child: Divider(
-                    color: Theme.of(context).accentColor.withOpacity(.50),
-                    thickness: 2,
-                    // height: 180,
-                  ))),
+          // Center(
+          //     child: SizedBox(
+          //         width: 180,
+          //         child: Divider(
+          //           color: Theme.of(context).accentColor.withOpacity(.50),
+          //           thickness: 2,
+          //           // height: 180,
+          //         ))),
         ],
       ),
     );

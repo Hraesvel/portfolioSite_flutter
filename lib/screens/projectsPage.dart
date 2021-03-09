@@ -41,60 +41,75 @@ class BackendWidget extends StatelessWidget {
 
     String tech = this.project.tech.toString();
 
-    FrontendReadMore readMoreWidget = FrontendReadMore(
-        mq: mediaQuery,
-        name: name,
-        project: project,
-        techStack: "Tech: ${tech.substring(1, tech.length - 1)}");
+    // FrontendReadMore readMoreWidget = FrontendReadMore(
+    //     mq: mediaQuery,
+    //     name: name,
+    //     project: project,
+    //     techStack: "Tech: ${tech.substring(1, tech.length - 1)}");
 
-    Widget techStack = Text(tech.substring(1, tech.length - 1));
+    // Widget techStack = SelectableText(tech.substring(1, tech.length - 1));
 
-    TapGestureRecognizer tap = TapGestureRecognizer();
-    tap.onTap = () {
-      showDialog(
-        context: context,
-        builder: (context) => SimpleDialog(
-          backgroundColor: _cardColor,
-          children: [readMoreWidget],
-        ),
-      );
-    };
+    // TapGestureRecognizer tap = TapGestureRecognizer();
+    // tap.onTap = () {
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) => SimpleDialog(
+    //       backgroundColor: _cardColor,
+    //       children: [readMoreWidget],
+    //     ),
+    //   );
+    // };
 
-    if (this.project.tech.length > 4) {
-      var showTech = this.project.tech.sublist(0, 3).toString();
-      techStack = RichText(
-        text: TextSpan(children: [
-          TextSpan(
-              text: "Tech: ${showTech.substring(1, showTech.length - 1)}",
-              style: Theme.of(context).textTheme.bodyText2),
-          TextSpan(
-              text: "...read more",
-              recognizer: tap,
-              style: Theme.of(context).textTheme.button)
-        ]),
-      );
+
+    // if (this.project.tech.length > 4) {
+    //   var showTech = this.project.tech.sublist(0, 3).toString();
+    //   techStack = RichText(
+    //     text: TextSpan(children: [
+    //       TextSpan(
+    //           text: "Tech: ${showTech.substring(1, showTech.length - 1)}",
+    //           style: Theme.of(context).textTheme.bodyText2),
+    //       TextSpan(
+    //           text: "...read more",
+    //           recognizer: tap,
+    //           style: Theme.of(context).textTheme.button)
+    //     ]),
+    //   );
+    // }
+
+    // bool isOverflow = project.description.length > maxLength;
+
+    // var spans = [
+    //   TextSpan(
+    //       text: isOverflow
+    //           ? project.description.substring(0, maxLength)
+    //           : project.description),
+    // ];
+    // if (isOverflow)
+
+    var spans = [TextSpan(text: project.description)];
+
+
+      //
+      // spans.add(TextSpan(
+      //     text: "...read more",
+      //     recognizer: tap,
+      //     style: Theme.of(context).textTheme.button));
+
+
+    for(var a in project.achievements) {
+      print(a);
+      spans.add(TextSpan(text: "\n -> $a"));
     }
+    
+    
 
-    bool isOverflow = project.description.length > maxLength;
-
-    var spans = [
-      TextSpan(
-          text: isOverflow
-              ? project.description.substring(0, maxLength)
-              : project.description)
-    ];
-    if (isOverflow)
-      spans.add(TextSpan(
-          text: "...read more",
-          recognizer: tap,
-          style: Theme.of(context).textTheme.button));
 
     var description = RichText(
         text: TextSpan(
             children: spans, style: Theme.of(context).textTheme.bodyText2));
 
     List<Widget> children = [
-      Text(
+      SelectableText(
         this.name,
         style: Theme.of(context).textTheme.headline3,
       ),
@@ -105,18 +120,13 @@ class BackendWidget extends StatelessWidget {
       Spacer(
         flex: 1,
       ),
-      techStack,
+      // techstack,
+      SelectableText(tech),
       Spacer(
         flex: 5,
       ),
       CommonUtility.simpleTextButton(
           uri: this.project.link, text: "View on Github ->")
-      // TextButton(
-      //     onPressed: () => launch(this.project.link),
-      //     child: Text(
-      //       "View on Github ->",
-      //       style: Theme.of(context).textTheme.button,
-      //     ))
     ];
 
     return Container(
@@ -158,7 +168,7 @@ class FrontendReadMore extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            SelectableText(
               this.name,
               style: Theme.of(context).textTheme.headline3,
             ),
@@ -171,7 +181,7 @@ class FrontendReadMore extends StatelessWidget {
                   child: ListView(
                 shrinkWrap: true,
                 children: [
-                  Text(
+                  SelectableText(
                     this.project.description,
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
@@ -181,11 +191,11 @@ class FrontendReadMore extends StatelessWidget {
             SizedBox(
               height: 25,
             ),
-            Text(
+            SelectableText(
               "Tech Stack:",
               textAlign: TextAlign.left,
             ),
-            Text(techStack, style: Theme.of(context).textTheme.bodyText2),
+            SelectableText(techStack, style: Theme.of(context).textTheme.bodyText2),
             Spacer(
               flex: 1,
             )
@@ -213,14 +223,14 @@ class FrontendWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> textBody = [
-      Text(
+      SelectableText(
         this.name,
         style: Theme.of(context).textTheme.headline3,
       ),
       SizedBox(
         height: 15,
       ),
-      Text(this.project.description)
+      SelectableText(this.project.description)
     ];
 
     for (var tech in this.project.tech) {
@@ -381,14 +391,14 @@ class _ProjectsState extends State<Projects>
     List<Widget> children = [
       Padding(
         padding: const EdgeInsets.only(bottom: 50),
-        child: Text(
+        child: SelectableText(
           "Backend Projects",
           style: Theme.of(context).textTheme.headline2,
         ),
       ),
     ];
 
-    var size = Size(40, 30);
+    var size = Size(40, 50);
 
     if (this.projects.backend.isNotEmpty)
       children.add(GridView(
@@ -421,7 +431,7 @@ class _ProjectsState extends State<Projects>
     List<Widget> content = [
       Padding(
         padding: const EdgeInsets.only(bottom: 50),
-        child: Text(
+        child: SelectableText(
           "Frontend Projects",
           style: Theme.of(context).textTheme.headline2,
         ),

@@ -49,22 +49,26 @@ class ExperienceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RichText hl = RichText(text: TextSpan(text: "Blank"));
+    // Widget hl = RichText(text: TextSpan(text: "Blank"));
     String timeline = "Month-year to Month-year";
 
     List<Widget> children = [];
 
     try {
-      hl = parseDetail(headline);
+      // hl = parseDetail(headline);
       timeline =
           "${convertTime(start)} - ${isCurrent ? "Present" : convertTime(end)}";
 
       children = [
-        hl,
-        Text(
+        parseDetail(headline),
+        SelectableText(
           timeline,
           style: theme.textTheme.headline4,
         ),
+        SizedBox(
+          height: 15,
+        ),
+        SelectableText(description, style: theme.textTheme.bodyText2),
         SizedBox(
           height: 20,
         ),
@@ -75,7 +79,10 @@ class ExperienceWidget extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: ListTile(
             leading: _icon,
-            title: Text(achievement),
+            title: SelectableText(
+              achievement,
+              style: theme.textTheme.bodyText2,
+            ),
             contentPadding: EdgeInsets.all(0),
             minLeadingWidth: 15,
           ),
@@ -103,7 +110,7 @@ class ExperienceWidget extends StatelessWidget {
     return formatter.format(dt);
   }
 
-  RichText parseDetail(String data) {
+  Widget parseDetail(String data) {
     RegExp exp2 = RegExp(
         r"((?<leading>.+)(?<coInfo>\[(?<name>.+)\]\((?<url>.+)\))(?<tail>.+)?)");
     RegExpMatch matches = exp2.firstMatch(data);
@@ -120,8 +127,7 @@ class ExperienceWidget extends StatelessWidget {
     var tap = TapGestureRecognizer();
     tap.onTap = () => launch(map['url']);
 
-    return RichText(
-        text: TextSpan(children: <TextSpan>[
+    return SelectableText.rich(TextSpan(children: <TextSpan>[
       TextSpan(text: map["leading"], style: theme.textTheme.headline3),
       TextSpan(
           text: map['name'],
@@ -180,7 +186,8 @@ class ExpTextButton extends StatelessWidget {
                     ? Theme.of(context).textTheme.button.copyWith(
                           fontSize: 20,
                           decoration: TextDecoration.underline,
-                          fontWeight: FontWeight.w400,
+                          decorationThickness: 2,
+                          fontWeight: FontWeight.w600,
                         )
                     : Theme.of(context).textTheme.button,
               ))),
@@ -206,7 +213,7 @@ class _ExperiencesState extends State<Experiences>
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 700,
+      height: 900,
       // decoration: BoxDecoration(color: Colors.purple),
       child: FutureBuilder(
         future: _constructExperience(),
@@ -217,7 +224,7 @@ class _ExperiencesState extends State<Experiences>
               height: 600,
               child: Center(
                 child: SizedBox(
-                  child: Text("Fetching Data..."),
+                  child: SelectableText("Fetching Data..."),
                   height: 60,
                   width: 60,
                 ),
@@ -227,7 +234,7 @@ class _ExperiencesState extends State<Experiences>
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              SelectableText(
                 "Experiences",
                 style: Theme.of(context).textTheme.headline2,
               ),
@@ -252,8 +259,8 @@ class _ExperiencesState extends State<Experiences>
               ),
               currentExp,
               TextButton(
-                  onPressed: () => launch(Uri.parse(WebAssets.resume)
-                      .toString()),
+                  onPressed: () =>
+                      launch(Uri.parse(WebAssets.resume).toString()),
                   child: Container(
                     height: 60,
                     width: 128,
@@ -283,10 +290,15 @@ class _ExperiencesState extends State<Experiences>
   Future<ExpData> parseExp(String filename) async {
     Map<String, dynamic> out;
     String json = "";
-    http.Response res = await CommonUtility.fetchFromS3(file: filename);
-    json = res.statusCode == 200
-        ? res.body
-        : await CommonUtility.loadStringAsset("assets/$filename");
+
+    if (kReleaseMode) {
+      http.Response res = await CommonUtility.fetchFromS3(file: filename);
+      json = res.statusCode == 200
+          ? res.body
+          : await CommonUtility.loadStringAsset("assets/$filename");
+    } else
+      json = await CommonUtility.loadStringAsset("assets/$filename");
+
     out = JsonDecoder().convert(json);
     ExpData exp = ExpData.fromJson(out);
     return exp;

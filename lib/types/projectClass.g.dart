@@ -11,6 +11,7 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     (json['tech'] as List)?.map((e) => e as String)?.toList(),
     json['name'],
     json['description'],
+    (json['achievements'] as List)?.map((e) => e as String)?.toList(),
     json['link'] as String,
     json['image'] as String,
     json['priority'] as int,
@@ -20,6 +21,7 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'priority': instance.priority,
+      'achievements': instance.achievements,
       'link': instance.link,
       'image': instance.image,
       'thumb': instance.thumb,

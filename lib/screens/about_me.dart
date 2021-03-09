@@ -45,21 +45,21 @@ class AboutMeBuilder extends StatelessWidget {
         children: [
           Container(
               // body
-              height: 300,
+              height: 400,
               constraints: BoxConstraints(maxWidth: 425, minWidth: 128),
               width: MediaQuery.of(context).size.width < 850
                   ? null
                   : (MediaQuery.of(context).size.width - 256) / 2,
-              child: SelectableText(
+              child: Scrollbar(child: SelectableText(
                 aboutMeText,
                 style: Theme.of(context).textTheme.bodyText2,
-                textAlign: TextAlign.justify,
-              )
+                // textAlign: TextAlign.justify,
+              ),)
               ),
           SizedBox(
             height: 25,
           ),
-          Container(child: Text("Here are the languages I work in:")),
+          Container(child: SelectableText("Here are the languages I work in:")),
           AboutMeSkillSet(skill: skills),
         ],
       ),
@@ -80,7 +80,7 @@ class AboutMeBuilder extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            SelectableText(
               "About Me",
               style: Theme.of(context).textTheme.headline2,
             ),
@@ -98,14 +98,14 @@ class AboutMeBuilder extends StatelessWidget {
                     ),
             ),
             Spacer(flex: 1),
-            Center(
-                child: SizedBox(
-                    width: 180,
-                    child: Divider(
-                      thickness: 2,
-                      color: Theme.of(context).accentColor.withOpacity(.3),
-                      // height: 120,
-                    )))
+            // Center(
+            //     child: SizedBox(
+            //         width: 180,
+            //         child: Divider(
+            //           thickness: 2,
+            //           color: Theme.of(context).accentColor.withOpacity(.3),
+            //           // height: 120,
+            //         )))
           ],
         ));
   }

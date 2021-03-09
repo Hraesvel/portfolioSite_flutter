@@ -71,9 +71,9 @@ class ListItemSkill extends StatelessWidget {
           "$leading",
           style: TextStyle(color: Theme.of(context).accentColor),
         ),
-        title: Text(
+        title: SelectableText(
           title,
-          style: Theme.of(context).textTheme.bodyText2,
+          style: Theme.of(context).textTheme.bodyText2.copyWith(fontFamily: 'RobotoMono'),
         ),
       ),
     );
