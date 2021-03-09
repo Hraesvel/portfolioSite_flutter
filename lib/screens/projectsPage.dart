@@ -392,6 +392,8 @@ class _ProjectsState extends State<Projects>
 
     if (this.projects.backend.isNotEmpty)
       children.add(GridView(
+        addRepaintBoundaries: false,
+        primary: true,
         shrinkWrap: true,
         reverse: true,
         children: this
@@ -402,7 +404,6 @@ class _ProjectsState extends State<Projects>
                   size: size,
                 ))
             .toList(),
-        addRepaintBoundaries: false,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: MediaQuery.of(context).size.width > 800 ? 2 : 1,
             crossAxisSpacing: 25.0,
