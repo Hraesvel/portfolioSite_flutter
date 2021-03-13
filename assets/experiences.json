@@ -11,7 +11,7 @@
       "description": "Providing backend and DevOps support for Crowdability, an education platform for individual investors",
       "achievements": [
         "Created a Lambda (AWS) function that invalidated old content on a Cloudfront.",
-        ""
+        "Update library of pre-existing Lambda funtions from Python 2.7 to 3."
       ]
     },
     {
@@ -21,8 +21,7 @@
       "end": 1483228800000,
       "isCurrent": false,
       "headline": "Various projects",
-      "description": "Worked on a series of contract jobs as a CG generalist, ranging from short films to indie game projects",
-      "achievements": []
+      "description": "Worked on a series of contract jobs as a CG generalist, ranging from short films to indie game projects"
     }
   ]
 }

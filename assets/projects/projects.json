@@ -7,8 +7,8 @@
       "description": "My Personal Website that was created using Flutter",
       "achievements": [
         "Built a personal website using the Flutter framework",
-        "Created a CMS template in Google Sheets to streamline content updates",
-        "Implemented a simple content delivery solution that pulls from AWS-S3"
+        "Created a Google Sheets CMS template to streamline the content update process",
+        "Designed the personal website to sources data such as experiences and projects content from an AWS-S3"
       ],
       "tech": [
         "Flutter",
@@ -24,7 +24,7 @@
       "priority": 100,
       "name": "ideaDog (server)",
       "link": "https://github.com/Ostoyae/ideaDog_server",
-      "description": "IdeaDog is a social web application for sharing ideas",
+      "description": "ideaDog is a social web application for sharing ideas",
       "achievements": [
         "Prototyped a backend using Rust and the Actix framework",
         "Designed an API where users can post ideas and upvote/downvote ideas",
@@ -39,25 +39,57 @@
       "bucket": "projects/backend/ideadog-server"
     },
     {
-      "priority": 1,
-      "name": "Holberton AirBnb clone",
+      "priority": 50,
+      "name": "AirBnb clone",
       "link": "https://github.com/Ostoyae/HBNB_Airbnb",
       "description": "This Airbnb clone project was created over six months in multiple iterations",
       "achievements": [
         "Developed REST APIs for Users, Places and Reviews following MVC Architecture",
         "Wrote static contents to Linux VM/NGINX web server with Python using Fabric module",
-        "Developed a console interpreter connected to local file storage and online database (MySQL) for object creation installation and JSON serialization"
+        "Developed a console that interfaces with the backend giving headless control of the data store on a database"
       ],
       "tech": [
         "Python",
         "Flask",
         "SqlAlchemy",
         "MySql",
-        "Html & Css",
+        "Html & CSS",
         "Javascript/JQuery"
       ],
       "image": "",
       "bucket": "projects/backend/ideadog-server"
+    },
+    {
+      "priority": 40,
+      "name": "Hackathon project: Spade fish",
+      "link": "https://github.com/BennettDixon/spadefish_gitapp",
+      "description": "Spade Fish is a platform where Github users can see a visualization of their most used coding\nlanguages",
+      "achievements": [
+        "Architected data-models, API gateway for the front-end and backend services in Python",
+        "Implemented Github client to request and process data to generate the metric values"
+      ],
+      "tech": [
+        "Python Flask",
+        "JavaScript",
+        "Docker",
+        "Github API"
+      ]
+    },
+    {
+      "priority": 25,
+      "name": "Simple Shell: repo",
+      "link": "https://github.com/Ostoyae/simple_shell",
+      "description": "Final project at Holberton School for low level programming which required replicating a shell",
+      "achievements": [
+        "Developed command line interpreters in C which can set up the runtime environment to run a set of simple shell commands",
+        "Implemented operations that process a user's commands and handles command arguments by dynamically allocating memory to store, split and tokenize user input"
+      ],
+      "tech": [
+        "C",
+        "Bash",
+        "Linux",
+        "Git"
+      ]
     }
   ]
 }
