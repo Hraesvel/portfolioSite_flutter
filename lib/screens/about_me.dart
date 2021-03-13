@@ -45,8 +45,8 @@ class AboutMeBuilder extends StatelessWidget {
         children: [
           Container(
               // body
-              height: 400,
-              constraints: BoxConstraints(maxWidth: 425, minWidth: 128),
+              height: 292,
+              constraints: BoxConstraints(maxWidth: 500, minWidth: 128),
               width: MediaQuery.of(context).size.width < 850
                   ? null
                   : (MediaQuery.of(context).size.width - 256) / 2,
@@ -59,6 +59,7 @@ class AboutMeBuilder extends StatelessWidget {
           SizedBox(
             height: 25,
           ),
+          // Spacer(flex: 1,),
           Container(child: SelectableText("Here are the languages I work in:")),
           AboutMeSkillSet(skill: skills),
         ],
@@ -75,7 +76,7 @@ class AboutMeBuilder extends StatelessWidget {
     ];
 
     return Container(
-        height: 900,
+        height: 800,
         padding: EdgeInsets.only(top: 80, bottom: 80),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

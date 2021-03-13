@@ -93,7 +93,7 @@ class ExperienceWidget extends StatelessWidget {
     }
 
     return Container(
-      height: 350,
+      height: 500,
       child: Padding(
         padding: const EdgeInsets.only(top: 25, bottom: 25),
         child: Column(
@@ -221,7 +221,7 @@ class _ExperiencesState extends State<Experiences>
           if (snapshot.hasError) debugPrint(snapshot.error.toString());
           if (!snapshot.hasData)
             return Container(
-              height: 600,
+              height: 700,
               child: Center(
                 child: SizedBox(
                   child: SelectableText("Fetching Data..."),
@@ -235,7 +235,7 @@ class _ExperiencesState extends State<Experiences>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SelectableText(
-                "Experiences",
+                "Experience",
                 style: Theme.of(context).textTheme.headline2,
               ),
               SizedBox(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio_site/utilities/customListItem.dart';
 
 class AboutMeSkillSet extends StatelessWidget {
   final List<String> skill;
@@ -26,7 +27,7 @@ class AboutMeSkillSet extends StatelessWidget {
 
       for (int j = tally; j < depth + tally; j++) {
         try {
-          s.add(ListItemSkill(
+          s.add(CustomListItem(
             leading: j.toString().padLeft(2, "0"),
             title: skill[j - 1],
           ));
@@ -47,35 +48,3 @@ class AboutMeSkillSet extends StatelessWidget {
   }
 }
 
-class ListItemSkill extends StatelessWidget {
-  final String title;
-  final String leading;
-  final double minLeadingWidth;
-
-  const ListItemSkill(
-      {Key key,
-      this.leading: "->",
-      this.title: "unknown",
-      this.minLeadingWidth: 12})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 150,
-      height: 30,
-      child: ListTile(
-        minLeadingWidth: minLeadingWidth,
-        contentPadding: EdgeInsets.all(0),
-        leading: Text(
-          "$leading",
-          style: TextStyle(color: Theme.of(context).accentColor),
-        ),
-        title: SelectableText(
-          title,
-          style: Theme.of(context).textTheme.bodyText2.copyWith(fontFamily: 'RobotoMono'),
-        ),
-      ),
-    );
-  }
-}

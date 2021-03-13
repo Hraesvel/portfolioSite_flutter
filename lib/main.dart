@@ -13,7 +13,7 @@ import 'package:url_strategy/url_strategy.dart';
 import 'screens.dart';
 
 void main() {
-  setPathUrlStrategy();
+  setPathUrlStrategy(); 
   runApp(
     MaterialApp(
       title: "Martin's Portfolio",
@@ -219,7 +219,7 @@ class _HomeState extends State<Home> {
       _textActionButton(() => _scrollToIndex(1),
           text: "About Me", style: Theme.of(context).textTheme.button),
       _textActionButton(() => _scrollToIndex(2),
-          text: "Experiences", style: Theme.of(context).textTheme.button),
+          text: "Experience", style: Theme.of(context).textTheme.button),
       _textActionButton(() => _scrollToIndex(3),
           text: "Projects", style: Theme.of(context).textTheme.button),
       _textActionButton(() => _scrollToIndex(4),

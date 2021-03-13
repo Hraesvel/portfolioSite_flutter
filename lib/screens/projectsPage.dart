@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:portfolio_site/app_level/access/access.dart';
 import 'package:portfolio_site/types/types.dart';
 import 'package:portfolio_site/utilities/common.dart';
+import 'package:portfolio_site/utilities/customListItem.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,25 +42,24 @@ class BackendWidget extends StatelessWidget {
 
     String tech = this.project.tech.toString();
 
-    // FrontendReadMore readMoreWidget = FrontendReadMore(
-    //     mq: mediaQuery,
-    //     name: name,
-    //     project: project,
-    //     techStack: "Tech: ${tech.substring(1, tech.length - 1)}");
+    var readMoreWidget = ReadMoreBullets(
+      mq: mediaQuery,
+      name: name,
+      project: project,
+    );
 
     // Widget techStack = SelectableText(tech.substring(1, tech.length - 1));
 
-    // TapGestureRecognizer tap = TapGestureRecognizer();
-    // tap.onTap = () {
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) => SimpleDialog(
-    //       backgroundColor: _cardColor,
-    //       children: [readMoreWidget],
-    //     ),
-    //   );
-    // };
-
+    TapGestureRecognizer tap = TapGestureRecognizer();
+    tap.onTap = () {
+      showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+          backgroundColor: _cardColor,
+          children: [readMoreWidget],
+        ),
+      );
+    };
 
     // if (this.project.tech.length > 4) {
     //   var showTech = this.project.tech.sublist(0, 3).toString();
@@ -88,21 +88,39 @@ class BackendWidget extends StatelessWidget {
 
     var spans = [TextSpan(text: project.description)];
 
+    //
+    // spans.add(TextSpan(
+    //     text: "...read more",
+    //     recognizer: tap,
+    //     style: Theme.of(context).textTheme.button));
 
-      //
-      // spans.add(TextSpan(
-      //     text: "...read more",
-      //     recognizer: tap,
-      //     style: Theme.of(context).textTheme.button));
+    List<Widget> achiv = [];
 
+    var max = project.achievements.length;
+    bool isOverflow;
 
-    for(var a in project.achievements) {
-      print(a);
-      spans.add(TextSpan(text: "\n -> $a"));
+    if ((isOverflow = MediaQuery.of(context).size.width < 500)) max = 1;
+
+    for (int i = 0; i < max; i++) {
+      achiv.add(CustomListItem(
+        title: project.achievements[i],
+        textStyle: Theme.of(context).textTheme.bodyText2,
+        width: null,
+        height: null,
+      ));
     }
-    
-    
 
+    if (isOverflow)
+      achiv.add(TextButton(
+        child: Text("...view all", style: Theme.of(context).textTheme.button,),
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => SimpleDialog(
+            backgroundColor: _cardColor,
+            children: [readMoreWidget],
+          ),
+        ),
+      ));
 
     var description = RichText(
         text: TextSpan(
@@ -117,6 +135,16 @@ class BackendWidget extends StatelessWidget {
         flex: 2,
       ),
       description,
+      Spacer(
+        flex: 1,
+      ),
+      SizedBox(
+        height: 250,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: achiv,
+        ),
+      ),
       Spacer(
         flex: 1,
       ),
@@ -144,8 +172,8 @@ class BackendWidget extends StatelessWidget {
   }
 }
 
-class FrontendReadMore extends StatelessWidget {
-  const FrontendReadMore({
+class ReadMore extends StatelessWidget {
+  const ReadMore({
     Key key,
     @required this.mq,
     @required this.name,
@@ -195,9 +223,54 @@ class FrontendReadMore extends StatelessWidget {
               "Tech Stack:",
               textAlign: TextAlign.left,
             ),
-            SelectableText(techStack, style: Theme.of(context).textTheme.bodyText2),
+            SelectableText(techStack,
+                style: Theme.of(context).textTheme.bodyText2),
             Spacer(
               flex: 1,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ReadMoreBullets extends StatelessWidget {
+  const ReadMoreBullets({
+    Key key,
+    @required this.mq,
+    @required this.name,
+    @required this.project,
+  }) : super(key: key);
+
+  final MediaQueryData mq;
+  final String name;
+  final Project project;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: mq.size.height > 500 ? 450 : mq.size.height,
+      width: mq.size.width > 800 ? 400 : mq.size.width * .8,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SelectableText(
+              this.name,
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Column(children: project.achievements
+                  .map((e) => CustomListItem(
+                        title: e,
+                        textStyle: Theme.of(context).textTheme.bodyText2,
+              width: null, height: null,
+                      ))
+                  .toList(),
             )
           ],
         ),
@@ -234,8 +307,9 @@ class FrontendWidget extends StatelessWidget {
     ];
 
     for (var tech in this.project.tech) {
-      textBody.add(ListItemSkill(
+      textBody.add(CustomListItem(
         title: tech,
+        textStyle: Theme.of(context).textTheme.bodyText1,
       ));
     }
 
@@ -257,10 +331,10 @@ class FrontendWidget extends StatelessWidget {
     );
 
     var children = [
+      // Image enlarge
       MaterialButton(
         child: Container(
-          constraints:
-              BoxConstraints(maxHeight: 321 * 0.7, maxWidth: 516 * 0.7),
+          constraints: BoxConstraints(maxHeight: 321, maxWidth: 516),
           decoration: BoxDecoration(
               color: Color(0xff081F41),
               border: Border.all(
@@ -282,10 +356,10 @@ class FrontendWidget extends StatelessWidget {
       Container(
         constraints: BoxConstraints(
           minWidth: 200,
-          maxHeight: 321 * 0.7,
-          maxWidth: 516 * 0.65,
+          maxHeight: 321,
+          maxWidth: 500,
         ),
-        height: 312 * 0.7,
+        height: 312,
         // decoration: BoxDecoration(color: Colors.white10),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start, children: textBody),
@@ -398,7 +472,10 @@ class _ProjectsState extends State<Projects>
       ),
     ];
 
-    var size = Size(40, 50);
+    var width = MediaQuery.of(context).size.width;
+
+    // var size = width < 500 ? Size(40, 80) : Size(40, 50);
+    var size =  Size(40, 50);
 
     if (this.projects.backend.isNotEmpty)
       children.add(GridView(
@@ -415,7 +492,7 @@ class _ProjectsState extends State<Projects>
                 ))
             .toList(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: MediaQuery.of(context).size.width > 800 ? 2 : 1,
+            crossAxisCount: width > 800 ? 2 : 1,
             crossAxisSpacing: 25.0,
             mainAxisSpacing: 15.0,
             childAspectRatio: (size.width / size.height)),
