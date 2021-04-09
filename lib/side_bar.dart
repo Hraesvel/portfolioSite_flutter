@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:url_launcher/link.dart';
+import 'package:portfolio_site/app_level/links/links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SideBar extends StatelessWidget {
@@ -30,17 +31,17 @@ class SideBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               createLinkedIcon(
-                  uri: "https://github.com/ostoyae/",
+                  uri: Links.github,
                   icon: FontAwesome5.github_alt),
 
               createLinkedIcon(
-                  uri: "https://linkedin.com/in/rustyboy",
+                  uri: Links.linkedIn,
                   icon: FontAwesome5.linkedin_in),
               createLinkedIcon(
-                  uri: "https://twitter.com/_ostoyae",
+                  uri: Links.twitter,
                   icon: FontAwesome5.twitter),
               createLinkedIcon(
-                  uri: "https://medium.com/@Ostoyae",
+                  uri: Links.medium,
                   icon: FontAwesome5.medium_m),
             ],
           ),
