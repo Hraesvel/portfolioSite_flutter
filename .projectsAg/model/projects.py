@@ -15,7 +15,8 @@ class Base:
 
     def __init__(self, **kwargs):
         if not kwargs:
-            pass
+            print("kwargs is required")
+            return
         for k, v in kwargs.items():
             try:
                 if k not in ["tech", "achievements"]:

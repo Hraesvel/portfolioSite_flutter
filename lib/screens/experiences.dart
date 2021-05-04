@@ -287,7 +287,7 @@ class _ExperiencesState extends State<Experiences>
     super.initState();
   }
 
-  Future<ExpData> parseExp(String filename) async {
+  Future<ExpData> parseExp(String filename, {String setLast = ""}) async {
     Map<String, dynamic> out;
     String json = "";
 
@@ -301,6 +301,11 @@ class _ExperiencesState extends State<Experiences>
 
     out = JsonDecoder().convert(json);
     ExpData exp = ExpData.fromJson(out);
+    if (setLast.isNotEmpty) {
+      int i = exp.data?.indexWhere((element) => element.name.contains(setLast));
+      exp.data?.add(exp.data[i]);
+      exp.data?.removeAt(i);
+    }
     return exp;
   }
 
@@ -309,7 +314,7 @@ class _ExperiencesState extends State<Experiences>
 
   Future<dynamic> _constructExperience() async {
     return this._memoizer.runOnce(() async {
-      this.expData = await parseExp('experiences.json');
+      this.expData = await parseExp('experiences.json', setLast: "CG Generalist");
       // create an Experience Widget from the first member of the array.
       currentExp = ExperienceWidget.fromData(expData.data[0], context);
       return this.expData;

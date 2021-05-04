@@ -13,9 +13,16 @@ import 'package:url_strategy/url_strategy.dart';
 import 'screens.dart';
 
 void main() {
-  setPathUrlStrategy(); 
+  setPathUrlStrategy();
   runApp(
     MaterialApp(
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).size.width < 900
+                ? MediaQuery.of(context).copyWith(textScaleFactor: .8)
+                : MediaQuery.of(context),
+            child: child);
+      },
       title: "Martin's Portfolio",
       home: Home(),
       theme: AppTheme.baseTheme,
@@ -204,16 +211,15 @@ class _HomeState extends State<Home> {
       ContactMe(),
     ];
 
-    if (_listOfPages == null)
-      _listOfPages = _pages
-          .asMap()
-          .entries
-          .map((e) => AutoScrollTag(
-              key: ValueKey(e.key),
-              controller: controller,
-              index: e.key,
-              child: e.value))
-          .toList();
+    _listOfPages ??= _pages
+        .asMap()
+        .entries
+        .map((e) => AutoScrollTag(
+            key: ValueKey(e.key),
+            controller: controller,
+            index: e.key,
+            child: e.value))
+        .toList();
 
     _actionButtons ??= _actionButtons = [
       _textActionButton(() => _scrollToIndex(1),
@@ -225,14 +231,12 @@ class _HomeState extends State<Home> {
       _textActionButton(() => _scrollToIndex(4),
           text: "Contact Me", style: Theme.of(context).textTheme.button),
       TextButton(
-        //Resume
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Resume",
-              style: Theme.of(context).textTheme.button),
-        ),
-        onPressed: () => launch(Uri.parse(WebAssets.resume).toString())
-      ),
+          //Resume
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Resume", style: Theme.of(context).textTheme.button),
+          ),
+          onPressed: () => launch(Uri.parse(WebAssets.resume).toString())),
     ];
 
     super.didChangeDependencies();
@@ -241,8 +245,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-
-    // WidgetsBinding.instance.addObserver(ResizeObserver(_rebuildScrollPosition));
   }
 
   Widget _textActionButton(Future<void> Function() fn,

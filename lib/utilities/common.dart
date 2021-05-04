@@ -12,7 +12,7 @@ class CommonUtility {
   }
 
   static Future<http.Response> fetchFromWeb(String url) async {
-    final res = await http.get(url);
+    final res = await http.get(Uri.parse(url));
     return res;
   }
 
@@ -20,11 +20,12 @@ class CommonUtility {
     String ep = "";
     ep += bucket == "" || bucket == null ? "" : "/$bucket";
     ep += file == "" || file == null ? "" : "/$file";
-    final res = await http.get("${Access.s3}$ep");
+    // final res = await http.get(Uri(path: "${Access.s3}$ep"));
+    final res = await http.get(Uri.parse("${Access.s3}$ep"));
     return res;
   }
 
-  static Widget simpleTextButton({String uri, String text, TextTheme textTheme, Widget child}) {
+  static Widget simpleTextButton({String uri, String text, TextStyle textTheme, Widget child}) {
     return Link(
         uri: Uri.parse(uri),
         target: LinkTarget.blank,

@@ -1,5 +1,5 @@
 name: portfolio_site
-description: my software engineer web site
+description: Martin Smith's, software engineer portfolio web site.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -25,29 +25,29 @@ dependencies:
     sdk: flutter
   url_launcher: ^6.0.2
 #  url_launcher_web: ^0.1.0
-  mustache_template: ^1.0.0+1
-  scroll_to_index: ^1.0.6
-  fluttericon: ^1.0.7
-  intl: ^0.16.1
-  json_annotation: ^3.1.1
-  http: ^0.12.2
-  transparent_image: ^1.0.0
-  async: ^2.4.2
+  mustache_template: ^2.0.0
+  scroll_to_index: ^2.0.0
+  fluttericon: ^2.0.0
+  intl: ^0.17.0
+  json_annotation: ^4.0.1
+  http: ^0.13.1
+  transparent_image: ^2.0.0
+  async: ^2.5.0
   url_strategy: ^0.2.0
-
+  flutter_layout_grid: ^1.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.1
+  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
-  build_runner: ^1.11.0
-  json_serializable: ^3.5.1
+  build_runner: ^1.12.2
+  json_serializable: ^4.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -12,6 +12,7 @@ import 'package:portfolio_site/utilities/common.dart';
 import 'package:portfolio_site/utilities/customListItem.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
 import 'about_me_builder_row.dart';
 import 'package:portfolio_site/main.dart';
@@ -25,8 +26,6 @@ class BackendWidget extends StatelessWidget {
   final _cardColor;
 
   final int maxLength = 135;
-
-  // final String? image;
 
   BackendWidget(this.project,
       {Key key,
@@ -48,7 +47,7 @@ class BackendWidget extends StatelessWidget {
       project: project,
     );
 
-    // Widget techStack = SelectableText(tech.substring(1, tech.length - 1));
+    Widget techStack = SelectableText(tech.substring(1, tech.length - 1));
 
     TapGestureRecognizer tap = TapGestureRecognizer();
     tap.onTap = () {
@@ -60,7 +59,7 @@ class BackendWidget extends StatelessWidget {
         ),
       );
     };
-
+    //
     // if (this.project.tech.length > 4) {
     //   var showTech = this.project.tech.sublist(0, 3).toString();
     //   techStack = RichText(
@@ -76,30 +75,31 @@ class BackendWidget extends StatelessWidget {
     //   );
     // }
 
-    // bool isOverflow = project.description.length > maxLength;
+    // var spans = [TextSpan(text: project.description)];
 
-    // var spans = [
-    //   TextSpan(
-    //       text: isOverflow
-    //           ? project.description.substring(0, maxLength)
-    //           : project.description),
-    // ];
-    // if (isOverflow)
+    // bool isOverflow = true;
+    bool isOverflow = project.description.length > maxLength;
 
-    var spans = [TextSpan(text: project.description)];
+    var spans = [
+      TextSpan(
+          text: isOverflow
+              ? project.description.substring(0, maxLength)
+              : project.description),
+    ];
 
-    //
-    // spans.add(TextSpan(
-    //     text: "...read more",
-    //     recognizer: tap,
-    //     style: Theme.of(context).textTheme.button));
+    if (isOverflow)
+      spans.add(TextSpan(
+          text: "...read more",
+          recognizer: tap,
+          style: Theme.of(context).textTheme.button));
 
+    // Achievements
     List<Widget> achiv = [];
 
     var max = project.achievements.length;
-    bool isOverflow;
+    // bool isOverSized;
 
-    if ((isOverflow = MediaQuery.of(context).size.width < 500)) max = 1;
+    // if ((isOverSized = MediaQuery.of(context).size.width < 500)) max = 1;
 
     for (int i = 0; i < max; i++) {
       achiv.add(CustomListItem(
@@ -112,7 +112,10 @@ class BackendWidget extends StatelessWidget {
 
     if (isOverflow)
       achiv.add(TextButton(
-        child: Text("...view all", style: Theme.of(context).textTheme.button,),
+        child: Text(
+          "...view all",
+          style: Theme.of(context).textTheme.button,
+        ),
         onPressed: () => showDialog(
           context: context,
           builder: (context) => SimpleDialog(
@@ -157,9 +160,9 @@ class BackendWidget extends StatelessWidget {
           uri: this.project.link, text: "View on Github ->")
     ];
 
-    return Container(
-      height: 8,
-      width: 16,
+    Widget out =  Container(
+      // height: 8,
+      // width: 16,
       decoration: BoxDecoration(color: _cardColor),
       child: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -169,6 +172,9 @@ class BackendWidget extends StatelessWidget {
         ),
       ),
     );
+
+
+    return out;
   }
 }
 
@@ -264,11 +270,13 @@ class ReadMoreBullets extends StatelessWidget {
             SizedBox(
               height: 25,
             ),
-            Column(children: project.achievements
+            Column(
+              children: project.achievements
                   .map((e) => CustomListItem(
                         title: e,
                         textStyle: Theme.of(context).textTheme.bodyText2,
-              width: null, height: null,
+                        width: null,
+                        height: null,
                       ))
                   .toList(),
             )
@@ -420,7 +428,7 @@ class _ProjectsState extends State<Projects>
                 _constructFrontend();
               } else {
                 return Container(
-                  height: 500,
+                  // height: 500,
                   child: Column(children: [
                     const Padding(
                       padding: EdgeInsets.only(top: 16),
@@ -475,11 +483,12 @@ class _ProjectsState extends State<Projects>
     var width = MediaQuery.of(context).size.width;
 
     // var size = width < 500 ? Size(40, 80) : Size(40, 50);
-    var size =  Size(40, 50);
+    var size = Size(40, 50);
 
     if (this.projects.backend.isNotEmpty)
       children.add(GridView(
         addRepaintBoundaries: false,
+        // addAutomaticKeepAlives: true,
         primary: true,
         shrinkWrap: true,
         reverse: true,
@@ -492,7 +501,7 @@ class _ProjectsState extends State<Projects>
                 ))
             .toList(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: width > 800 ? 2 : 1,
+            crossAxisCount: width >= 1024 ? 2 : 1,
             crossAxisSpacing: 25.0,
             mainAxisSpacing: 15.0,
             childAspectRatio: (size.width / size.height)),
@@ -550,7 +559,7 @@ class _ProjectsState extends State<Projects>
 
           // Convert Json to Object
           projects = ProjectData.fromJson(out);
-          projects.sortProjects(reverseBackend: true);
+          projects.sortProjects(reverseBackend: false);
         } catch (e) {
           print(e.toString());
         }

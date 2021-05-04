@@ -21,7 +21,9 @@ class Introduction extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Spacer(flex: 1,),
+          Spacer(
+            flex: 1,
+          ),
           // SizedBox(height: 120),
           SelectableText(
             "Hello, I'm Martin Smith",
@@ -64,7 +66,9 @@ class Introduction extends StatelessWidget {
                         color:
                             Theme.of(context).accentColor.withOpacity(0.40))),
               )),
-          Spacer(flex: 1,),
+          Spacer(
+            flex: 1,
+          ),
           // Center(
           //     child: SizedBox(
           //         width: 180,
