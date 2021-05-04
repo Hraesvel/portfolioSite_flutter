@@ -265,7 +265,7 @@ class _ExperiencesState extends State<Experiences>
                     height: 60,
                     width: 128,
                     alignment: Alignment.center,
-                    child: Text("Resume",
+                    child: Text("View Resume",
                         style: Theme.of(context).textTheme.button),
                     decoration: BoxDecoration(
                         color: Colors.transparent,

@@ -75,7 +75,7 @@ class ContactMe extends StatelessWidget {
                       width: 128,
                       alignment: Alignment.center,
                       child:
-                          Text("Resume", style: Theme.of(context).textTheme.button),
+                          Text("View Resume", style: Theme.of(context).textTheme.button),
                       decoration: BoxDecoration(
                           color: Colors.transparent,
                           border: Border.all(
