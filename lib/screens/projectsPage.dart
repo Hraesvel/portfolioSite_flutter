@@ -41,10 +41,11 @@ class BackendWidget extends StatelessWidget {
 
     String tech = this.project.tech.toString();
 
-    var readMoreWidget = ReadMoreBullets(
+    var readMoreWidget = ReadMore(
       mq: mediaQuery,
       name: name,
       project: project,
+      techStack: tech,
     );
 
     Widget techStack = SelectableText(tech.substring(1, tech.length - 1));
@@ -82,6 +83,7 @@ class BackendWidget extends StatelessWidget {
 
     var spans = [
       TextSpan(
+          style: Theme.of(context).textTheme.bodyText2,
           text: isOverflow
               ? project.description.substring(0, maxLength)
               : project.description),
@@ -107,6 +109,7 @@ class BackendWidget extends StatelessWidget {
         textStyle: Theme.of(context).textTheme.bodyText2,
         width: null,
         height: null,
+        color: i % 2 == 0 ? Colors.transparent : Colors.white.withOpacity(.02),
       ));
     }
 
@@ -130,7 +133,7 @@ class BackendWidget extends StatelessWidget {
             children: spans, style: Theme.of(context).textTheme.bodyText2));
 
     List<Widget> children = [
-      SelectableText(
+      Text(
         this.name,
         style: Theme.of(context).textTheme.headline3,
       ),
@@ -141,12 +144,9 @@ class BackendWidget extends StatelessWidget {
       Spacer(
         flex: 1,
       ),
-      SizedBox(
-        height: 250,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: achiv,
-        ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: achiv,
       ),
       Spacer(
         flex: 1,
@@ -154,13 +154,13 @@ class BackendWidget extends StatelessWidget {
       // techstack,
       SelectableText(tech),
       Spacer(
-        flex: 5,
+        flex: 3,
       ),
       CommonUtility.simpleTextButton(
           uri: this.project.link, text: "View on Github ->")
     ];
 
-    Widget out =  Container(
+    Widget out = Container(
       // height: 8,
       // width: 16,
       decoration: BoxDecoration(color: _cardColor),
@@ -173,12 +173,13 @@ class BackendWidget extends StatelessWidget {
       ),
     );
 
-
     return out;
   }
 }
 
 class ReadMore extends StatelessWidget {
+  final MediaQueryData mq;
+
   const ReadMore({
     Key key,
     @required this.mq,
@@ -187,50 +188,69 @@ class ReadMore extends StatelessWidget {
     @required this.techStack,
   }) : super(key: key);
 
-  final MediaQueryData mq;
   final String name;
   final Project project;
   final String techStack;
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> achiv = [];
+
+    var max = project.achievements.length;
+
+    for (int i = 0; i < max; i++) {
+      achiv.add(CustomListItem(
+        title: project.achievements[i],
+        textStyle: Theme.of(context).textTheme.bodyText2,
+        width: null,
+        height: null,
+        color: i % 2 == 0 ? Colors.transparent : Colors.white.withOpacity(.02),
+      ));
+    }
+
+    debugPrint(achiv.toString());
+
     return Container(
       height: mq.size.height > 500 ? 450 : mq.size.height,
       width: mq.size.width > 800 ? 400 : mq.size.width * .8,
+      constraints: BoxConstraints(maxHeight: 900),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SelectableText(
+            Text(
               this.name,
               style: Theme.of(context).textTheme.headline3,
             ),
-            SizedBox(
-              height: 25,
-            ),
-            SizedBox(
+            Spacer(flex: 1),
+            Container(
+              // constraints: BoxConstraints(maxHeight: 250),
               height: 250,
               child: Scrollbar(
                   child: ListView(
                 shrinkWrap: true,
                 children: [
-                  SelectableText(
-                    this.project.description,
+                  Text(
+                    this.project.description ?? "",
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ],
               )),
             ),
-            SizedBox(
-              height: 25,
+            Spacer(flex: 1),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: achiv,
             ),
-            SelectableText(
+            Spacer(
+              flex: 1,
+            ),
+            Text(
               "Tech Stack:",
               textAlign: TextAlign.left,
             ),
-            SelectableText(techStack,
-                style: Theme.of(context).textTheme.bodyText2),
+            Text(techStack ?? "", style: Theme.of(context).textTheme.bodyText2),
             Spacer(
               flex: 1,
             )
@@ -244,11 +264,12 @@ class ReadMore extends StatelessWidget {
 class ReadMoreBullets extends StatelessWidget {
   const ReadMoreBullets({
     Key key,
+    this.des: "",
     @required this.mq,
     @required this.name,
     @required this.project,
   }) : super(key: key);
-
+  final String des;
   final MediaQueryData mq;
   final String name;
   final Project project;
@@ -311,7 +332,8 @@ class FrontendWidget extends StatelessWidget {
       SizedBox(
         height: 15,
       ),
-      SelectableText(this.project.description)
+      SelectableText(this.project.description,
+          style: Theme.of(context).textTheme.bodyText2)
     ];
 
     for (var tech in this.project.tech) {
@@ -488,8 +510,8 @@ class _ProjectsState extends State<Projects>
     if (this.projects.backend.isNotEmpty)
       children.add(GridView(
         addRepaintBoundaries: false,
-        // addAutomaticKeepAlives: true,
-        primary: true,
+        addAutomaticKeepAlives: true,
+        primary: false,
         shrinkWrap: true,
         reverse: true,
         children: this

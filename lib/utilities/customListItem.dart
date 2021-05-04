@@ -6,6 +6,7 @@ class CustomListItem extends StatelessWidget {
   final double minLeadingWidth;
   final double width;
   final double height;
+  final Color color;
 
   final TextStyle textStyle;
 
@@ -16,14 +17,16 @@ class CustomListItem extends StatelessWidget {
       this.textStyle,
       this.minLeadingWidth: 12,
       this.width: 150,
-      this.height: 30})
+      this.height: 30,
+      this.color: Colors.transparent})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: width,
       height: height,
+      decoration: BoxDecoration(color: color),
       child: ListTile(
         minLeadingWidth: minLeadingWidth,
         contentPadding: EdgeInsets.all(0),
