@@ -167,16 +167,16 @@ class _HomeState extends State<Home> {
         color: Color(0xff0a192f),
         child: Stack(
           children: [
-            Padding(
-              padding: CommonWidgets.defaultEdgeInset(context),
-              child: SingleChildScrollView(
+            SingleChildScrollView(
+              child: Padding(
+                padding: CommonWidgets.defaultEdgeInset(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: _listOfPages,
                 ),
-                controller: controller,
-                scrollDirection: scrollDirection,
               ),
+              controller: controller,
+              scrollDirection: scrollDirection,
             ),
             SideBar(),
           ],
