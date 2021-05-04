@@ -514,6 +514,11 @@ class _ProjectsState extends State<Projects>
   }
 
   void _constructFrontend() {
+    if (this.projects.frontend.isEmpty) {
+      this.fp =  Container();
+      return;
+    }
+
     List<Widget> content = [
       Padding(
         padding: const EdgeInsets.only(bottom: 50),
