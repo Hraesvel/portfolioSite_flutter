@@ -19,7 +19,7 @@ void main() {
       builder: (context, child) {
         return MediaQuery(
             data: MediaQuery.of(context).size.width < 900
-                ? MediaQuery.of(context).copyWith(textScaleFactor: .8)
+                ? MediaQuery.of(context).copyWith(textScaleFactor: .65)
                 : MediaQuery.of(context),
             child: child);
       },
