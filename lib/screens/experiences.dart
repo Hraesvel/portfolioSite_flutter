@@ -9,6 +9,8 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:portfolio_site/app_level/assets/assets.dart';
+import 'package:portfolio_site/app_level/links/links.dart';
+import 'package:portfolio_site/app_level/text/text.dart';
 import 'package:portfolio_site/types/types.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,6 +36,7 @@ class ExperienceWidget extends StatelessWidget {
   final int end;
   final bool isCurrent;
   final List<String> _achievements;
+  final List<Widget> _children;
 
   const ExperienceWidget(
       {Key key,
@@ -43,8 +46,10 @@ class ExperienceWidget extends StatelessWidget {
       this.description: "",
       this.end: 0,
       this.isCurrent: true,
+      List<Widget> children: const <Widget>[],
       List<String> achievements: const <String>[]})
       : this._achievements = achievements,
+        this._children = children,
         super(key: key);
 
   @override
@@ -73,6 +78,22 @@ class ExperienceWidget extends StatelessWidget {
           height: 20,
         ),
       ];
+
+
+
+      if (this._children != null && this._children.isNotEmpty) {
+        this._children.removeWhere((element) => element == null);
+        if (this.description.isEmpty) {
+          // children[3] = this.child;
+          children = [
+            ...children.sublist(0, 3),
+            ...this._children,
+            ...children.sublist(3)
+          ];
+        } else
+          // children.insert(5, this.child);
+          children = [...children, ...this._children];
+      }
 
       _achievements.forEach((achievement) {
         children.add(Padding(
@@ -111,8 +132,7 @@ class ExperienceWidget extends StatelessWidget {
   }
 
   Widget parseDetail(String data) {
-    RegExp exp2 = RegExp(
-        r"((?<leading>.+)(?<coInfo>\[(?<name>.+)\]\((?<url>.+)\))(?<tail>.+)?)");
+    RegExp exp2 = CommonWidgets.regex;
     RegExpMatch matches = exp2.firstMatch(data);
     if (matches == null ||
         matches.groupCount == 0 ||
@@ -132,7 +152,8 @@ class ExperienceWidget extends StatelessWidget {
       TextSpan(
           text: map['name'],
           style: theme.textTheme.headline3.copyWith(
-              color: theme.accentColor, decoration: TextDecoration.underline),
+              color: theme.colorScheme.secondary,
+              decoration: TextDecoration.underline),
           recognizer: tap),
       map.containsKey('tail')
           ? TextSpan(text: map["tail"], style: theme.textTheme.headline3)
@@ -140,7 +161,8 @@ class ExperienceWidget extends StatelessWidget {
     ]));
   }
 
-  static Widget fromData(Experience data, BuildContext context) {
+  static Widget fromData(Experience data, BuildContext context,
+      {List<Widget> children}) {
     return ExperienceWidget(
         headline: data.headline,
         start: data.start,
@@ -148,6 +170,7 @@ class ExperienceWidget extends StatelessWidget {
         achievements: data.achievements,
         isCurrent: data.isCurrent,
         end: data.end,
+        children: children,
         theme: Theme.of(context));
   }
 }
@@ -166,6 +189,24 @@ class ExpTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget resume, artPortfolio;
+    if (this.experience.name == "CG Generalist") {
+
+      String resLink = WebAssets.cgResume;
+      if(!kIsWeb)
+        resLink =  "https://msmith.online/assets/static/Martin_CG_Generalist.pdf";
+
+      resume = TextButton(
+          onPressed: () => launch(Uri.parse(resLink).toString()),
+          child: Text(TextSnips.viewResumeCG,
+              style: Theme.of(context).textTheme.button));
+
+      artPortfolio = TextButton(
+          onPressed: () => launch(Uri.parse(Links.cgPortfolio).toString()),
+          child: Text(TextSnips.viewCGPort,
+              style: Theme.of(context).textTheme.button));
+    }
+
     return Container(
       width: 175,
       child: TextButton(
@@ -173,8 +214,9 @@ class ExpTextButton extends StatelessWidget {
             // ignore: invalid_use_of_protected_member
             _parent.setState(() {
               if (this.idx == _parent._displayedIdx) return;
-              _parent.currentExp =
-                  ExperienceWidget.fromData(experience, context);
+              _parent.currentExp = ExperienceWidget.fromData(
+                  experience, context,
+                  children: [resume, artPortfolio]);
               _parent._displayedIdx = this.idx;
             });
           },
@@ -213,7 +255,7 @@ class _ExperiencesState extends State<Experiences>
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 900,
+      height: 800,
       // decoration: BoxDecoration(color: Colors.purple),
       child: FutureBuilder(
         future: _constructExperience(),
@@ -265,7 +307,7 @@ class _ExperiencesState extends State<Experiences>
                     height: 60,
                     width: 128,
                     alignment: Alignment.center,
-                    child: Text("View Resume",
+                    child: Text(TextSnips.viewResume,
                         style: Theme.of(context).textTheme.button),
                     decoration: BoxDecoration(
                         color: Colors.transparent,
@@ -314,7 +356,8 @@ class _ExperiencesState extends State<Experiences>
 
   Future<dynamic> _constructExperience() async {
     return this._memoizer.runOnce(() async {
-      this.expData = await parseExp('experiences.json', setLast: "CG Generalist");
+      this.expData =
+          await parseExp('experiences.json', setLast: "CG Generalist");
       // create an Experience Widget from the first member of the array.
       currentExp = ExperienceWidget.fromData(expData.data[0], context);
       return this.expData;

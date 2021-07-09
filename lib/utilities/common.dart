@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:portfolio_site/app_level/access/access.dart';
@@ -25,16 +27,27 @@ class CommonUtility {
     return res;
   }
 
-  static Widget simpleTextButton({String uri, String text, TextStyle textTheme, Widget child}) {
+  static Future<http.Response> sendContact(Map<String, String> data) async {
+    var body = jsonEncode(data);
+    final res =
+        await http.post(Uri.parse(Access.contact_me), body: body, headers: {
+      "Content-Type": "application/json",
+    });
+    return res;
+  }
+
+  static Widget simpleTextButton(
+      {String uri, String text, TextStyle textTheme, Widget child}) {
     return Link(
         uri: Uri.parse(uri),
-        target: LinkTarget.blank,
+        target: LinkTarget.self,
         builder: (context, followLink) => TextButton(
             onPressed: () => followLink(),
-            child: child ?? Text(
-              text,
-              style: textTheme ?? Theme.of(context).textTheme.button,
-            )));
+            child: child ??
+                Text(
+                  text,
+                  style: textTheme ?? Theme.of(context).textTheme.button,
+                )));
   }
 }
 
@@ -58,4 +71,7 @@ class CommonWidgets {
 
     return edgeInset;
   }
+
+  static RegExp regex = RegExp(
+      r"((?<leading>.+)(?<coInfo>\[(?<name>.+)\]\((?<url>.+)\))(?<tail>.+)?)");
 }

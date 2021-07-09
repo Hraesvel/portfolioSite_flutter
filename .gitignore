@@ -53,3 +53,7 @@ app.*.map.json
 /.projectsAg/token.pickle
 
 pubspec.lock
+
+windows/
+
+linux/

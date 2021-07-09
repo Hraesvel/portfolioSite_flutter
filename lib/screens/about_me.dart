@@ -39,13 +39,16 @@ class AboutMeBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double imageSizeLogPix = 292 / MediaQuery.of(context).devicePixelRatio;
+
     List<Widget> children = [
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
               // body
-              height: 292,
+              height: imageSizeLogPix,
               constraints: BoxConstraints(maxWidth: 500, minWidth: 128),
               width: MediaQuery.of(context).size.width < 850
                   ? null
@@ -65,8 +68,8 @@ class AboutMeBuilder extends StatelessWidget {
         ],
       ),
       Container(
-        width: 292,
-        height: 292,
+        width: imageSizeLogPix,
+        height: imageSizeLogPix,
         decoration: BoxDecoration(color: Colors.blueGrey),
         child: Image(
           image: WebAssets.imageMe,
@@ -99,14 +102,6 @@ class AboutMeBuilder extends StatelessWidget {
                     ),
             ),
             Spacer(flex: 1),
-            // Center(
-            //     child: SizedBox(
-            //         width: 180,
-            //         child: Divider(
-            //           thickness: 2,
-            //           color: Theme.of(context).accentColor.withOpacity(.3),
-            //           // height: 120,
-            //         )))
           ],
         ));
   }

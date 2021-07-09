@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:portfolio_site/app_level/links/links.dart';
+import 'package:portfolio_site/app_level/text/text.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,9 +16,11 @@ class Introduction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Container(
       // padding: EdgeInsets.only(top: 120),
-      height: 900,
+      height: 800,
       // decoration: BoxDecoration(color: Colors.purple.withOpacity(.2)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,7 +30,7 @@ class Introduction extends StatelessWidget {
           ),
           // SizedBox(height: 120),
           SelectableText(
-            "Hello, I'm Martin Smith",
+            TextSnips.introBlurb,
             textAlign: TextAlign.start,
             style: Theme.of(context).textTheme.headline1,
           ),
@@ -35,29 +39,33 @@ class Introduction extends StatelessWidget {
           ),
           Container(
             width: 500,
-            child: SelectableText(
-              "I'm a full-stack software engineer based in ${this.info['resident']}. I'm a passionate coder and fast learner with broad interests in frontend development, backend services, system design and networking.",
-              textAlign: TextAlign.start,
-              style: Theme.of(context).textTheme.bodyText1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SelectableText(
+                  TextSnips.intro(info: this.info),
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                SizedBox(
+                  height: 32,
+                ),
+                CommonUtility.simpleTextButton(
+                    text: TextSnips.viewSource, uri: Links.pageSource)
+              ],
             ),
           ),
+
           SizedBox(
-            height: 64,
+            height: 32,
           ),
           TextButton(
-              onPressed: () {
-                Uri emailMe = Uri(
-                    scheme: "mailto",
-                    path: "mcodesmith@gmail.com",
-                    queryParameters: {'subject': 'Greetings'});
-
-                launch(emailMe.toString());
-              },
+              onPressed: () => launch(Links.emailUri.toString()),
               child: Container(
                 height: 60,
                 width: 128,
                 alignment: Alignment.center,
-                child: Text("Contact Me",
+                child: Text(TextSnips.contactMe,
                     style: Theme.of(context).textTheme.button),
                 decoration: BoxDecoration(
                     color: Colors.transparent,
@@ -69,14 +77,6 @@ class Introduction extends StatelessWidget {
           Spacer(
             flex: 1,
           ),
-          // Center(
-          //     child: SizedBox(
-          //         width: 180,
-          //         child: Divider(
-          //           color: Theme.of(context).accentColor.withOpacity(.50),
-          //           thickness: 2,
-          //           // height: 180,
-          //         ))),
         ],
       ),
     );

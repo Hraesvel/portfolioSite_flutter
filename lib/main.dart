@@ -19,7 +19,7 @@ void main() {
       builder: (context, child) {
         return MediaQuery(
             data: MediaQuery.of(context).size.width < 900
-                ? MediaQuery.of(context).copyWith(textScaleFactor: .65)
+                ? MediaQuery.of(context).copyWith(textScaleFactor: .85)
                 : MediaQuery.of(context),
             child: child);
       },
@@ -91,10 +91,9 @@ class Footer extends StatelessWidget {
             TextButton(
               onPressed: () => showAboutDialog(
                 context: context,
-                applicationVersion: '0.0.3',
                 applicationLegalese: '',
               ),
-              child: SelectableText("About"),
+              child: Text("About"),
             ),
           ],
         ),
@@ -127,6 +126,7 @@ class _HomeState extends State<Home> {
   AutoScrollController controller;
   final Axis scrollDirection = Axis.vertical;
   final Duration scrollDuration = Duration(milliseconds: 1600);
+
 
   List<Widget> _actionButtons;
   List<Widget> _pages;
@@ -188,6 +188,9 @@ class _HomeState extends State<Home> {
   @override
   void didChangeDependencies() {
     controller ??= AutoScrollController(
+      initialScrollOffset: MediaQuery.of(context).size.width < 500 ? 100 : 0,
+
+        suggestedRowHeight: 300,
         axis: scrollDirection,
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom));
@@ -215,12 +218,20 @@ class _HomeState extends State<Home> {
         .asMap()
         .entries
         .map((e) => AutoScrollTag(
+
             key: ValueKey(e.key),
             controller: controller,
             index: e.key,
-            child: e.value))
+            child: !(e.key < _pages.length)
+                ? e.value
+                : Padding(
+                    padding: EdgeInsets.only(
+                        bottom: 50 / MediaQuery.of(context).devicePixelRatio),
+                    child: e.value,
+                  )))
         .toList();
 
+    // menu bar buttons
     _actionButtons ??= _actionButtons = [
       _textActionButton(() => _scrollToIndex(1),
           text: "About Me", style: Theme.of(context).textTheme.button),
@@ -261,10 +272,6 @@ class _HomeState extends State<Home> {
                     fontWeight: FontWeight.w100)),
       ),
     );
-  }
-
-  void _rebuildScrollPosition() {
-    setState(() {});
   }
 
   Future<void> _scrollToIndex(int index) async {

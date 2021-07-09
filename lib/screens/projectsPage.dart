@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
@@ -504,8 +503,8 @@ class _ProjectsState extends State<Projects>
 
     var width = MediaQuery.of(context).size.width;
 
-    // var size = width < 500 ? Size(40, 80) : Size(40, 50);
-    var size = Size(40, 50);
+    var size = width < 500 ? Size(40, 80) : Size(40, 50);
+    // var size = Size(40, 50);
 
     if (this.projects.backend.isNotEmpty)
       children.add(GridView(

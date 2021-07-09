@@ -34,7 +34,7 @@ class AppTheme {
           headline4: TextStyle(
               color: Color(0xffB7BEDB).withOpacity(.55),
               fontSize: 18.0,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w400,
               fontFamily: string),
           bodyText1: TextStyle(
             fontSize: 20.0,
@@ -54,6 +54,7 @@ class AppTheme {
               fontFamily: 'RobotoMono',
               fontSize: 16.0,
               color: Color(0xffeb3575),
+              height: 1,
               fontWeight: FontWeight.w400)),
     );
   }
