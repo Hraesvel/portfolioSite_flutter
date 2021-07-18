@@ -8,12 +8,14 @@ part of 'projectDataClass.dart';
 
 ProjectData _$ProjectDataFromJson(Map<String, dynamic> json) {
   return ProjectData(
-    (json['frontend'] as List<dynamic>?)
-        ?.map((e) => Project.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    (json['backend'] as List<dynamic>?)
-        ?.map((e) => Project.fromJson(e as Map<String, dynamic>))
-        .toList(),
+    (json['frontend'] as List?)
+        ?.map((e) =>
+            e == null ? null : Project.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    (json['backend'] as List?)
+        ?.map((e) =>
+            e == null ? null : Project.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 

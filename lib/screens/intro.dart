@@ -8,11 +8,11 @@ import 'package:portfolio_site/utilities/common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Introduction extends StatelessWidget {
-  final Map info;
+  final Map? info;
 
-  final Size size;
+  final Size? size;
 
-  Introduction({Key key, @required this.info, this.size}) : super(key: key);
+  Introduction({Key? key, required this.info, this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

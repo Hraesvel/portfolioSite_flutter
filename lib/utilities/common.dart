@@ -27,7 +27,7 @@ class CommonUtility {
     return res;
   }
 
-  static Future<http.Response> sendContact(Map<String, String> data) async {
+  static Future<http.Response> sendContact(Map<String, String?> data) async {
     var body = jsonEncode(data);
     final res =
         await http.post(Uri.parse(Access.contact_me), body: body, headers: {
@@ -37,15 +37,15 @@ class CommonUtility {
   }
 
   static Widget simpleTextButton(
-      {String uri, String text, TextStyle textTheme, Widget child}) {
+      {required String uri, String? text, TextStyle? textTheme, Widget? child}) {
     return Link(
         uri: Uri.parse(uri),
         target: LinkTarget.self,
         builder: (context, followLink) => TextButton(
-            onPressed: () => followLink(),
+            onPressed: () => followLink!(),
             child: child ??
                 Text(
-                  text,
+                  text!,
                   style: textTheme ?? Theme.of(context).textTheme.button,
                 )));
   }
@@ -53,7 +53,7 @@ class CommonUtility {
 
 class CommonWidgets {
   static EdgeInsets defaultEdgeInset(BuildContext context,
-      {Key key, double pageWidth = 980, double left, double right}) {
+      {Key? key, double pageWidth = 980, double? left, double? right}) {
     EdgeInsets edgeInset;
     double mult = 0.12;
     var edge = MediaQuery.of(context).size.width * mult;

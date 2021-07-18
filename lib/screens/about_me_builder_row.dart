@@ -4,13 +4,13 @@ import 'package:portfolio_site/utilities/customListItem.dart';
 class AboutMeSkillSet extends StatelessWidget {
   final List<String> skill;
   final rows;
-  final depth;
+  final int depth;
   final start;
   final numPadding;
 
   const AboutMeSkillSet(
-      {Key key,
-      @required this.skill,
+      {Key? key,
+      required this.skill,
       this.rows: 2,
       this.depth: 4,
       this.start: 1,

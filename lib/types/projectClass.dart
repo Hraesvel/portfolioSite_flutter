@@ -6,38 +6,38 @@ part 'projectClass.g.dart';
 
 @JsonSerializable()
 class Project {
-  Project(List<String> tech, name, description, this.achievements, this.link,
+  Project(List<String>? tech, name, description, this.achievements, this.link,
       this.image, this.priority, this.bucket) {
     this._tech = tech;
     this._name = name;
     this._description = description;
   }
 
-  int priority = 0;
+  int? priority = 0;
 
-  List<String> achievements;
+  List<String>? achievements;
 
   @JsonKey(name: 'name')
-  String _name;
+  String? _name;
   @JsonKey(name: 'description')
-  String _description;
-  String link;
+  String? _description;
+  String? link;
 
   @JsonKey(name: 'tech')
-  List<String> _tech = [];
+  List<String>? _tech = [];
   @JsonKey(nullable: true)
-  String image;
+  String? image;
 
   @JsonKey(nullable: true)
-  String thumb;
-  String bucket;
+  String? thumb;
+  String? bucket;
 
-  String get name => utf8.decode(_name.codeUnits);
+  String get name => utf8.decode(_name!.codeUnits);
 
-  String get description => utf8.decode(_description.codeUnits);
+  String get description => utf8.decode(_description!.codeUnits);
 
   List<String> get tech {
-    return _tech.map((e) => utf8.decode(e.codeUnits)).toList();
+    return _tech!.map((e) => utf8.decode(e.codeUnits)).toList();
   }
 
   factory Project.fromJson(Map<String, dynamic> json) =>

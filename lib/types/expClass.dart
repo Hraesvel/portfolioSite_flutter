@@ -7,14 +7,14 @@ class Experience {
   Experience(this.name, this.start, this.end, this.isCurrent, this.isUTC,
       this.headline, this.description);
 
-  String name;
-  bool isCurrent;
-  int start;
-  int end;
-  bool isUTC = true;
-  String headline;
-  String description;
-  List<String> achievements;
+  String? name;
+  bool? isCurrent;
+  int? start;
+  int? end;
+  bool? isUTC = true;
+  String? headline;
+  String? description;
+  List<String>? achievements;
 
   factory Experience.fromJson(Map<String, dynamic> json) => _$ExperienceFromJson(json);
 

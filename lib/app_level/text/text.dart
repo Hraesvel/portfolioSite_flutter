@@ -1,7 +1,7 @@
 class TextSnips {
   TextSnips._();
 
-  static String intro({info}) =>
+  static String intro({required info}) =>
       "I'm a full-stack software engineer based in ${info['resident']}. I'm a passionate coder and fast learner with broad interests in frontend development, backend services, system design and networking.";
   static const viewSource = "View Page Source ->";
   static const viewResume = "View Resume";

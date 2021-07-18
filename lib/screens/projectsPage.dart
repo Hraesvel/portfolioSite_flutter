@@ -18,7 +18,7 @@ import 'package:portfolio_site/main.dart';
 
 class BackendWidget extends StatelessWidget {
   final Project project;
-  final int priority;
+  final int? priority;
   final String name;
 
   final Size size;
@@ -27,7 +27,7 @@ class BackendWidget extends StatelessWidget {
   final int maxLength = 135;
 
   BackendWidget(this.project,
-      {Key key,
+      {Key? key,
       this.size = const Size(25, 25),
       cardColor: const Color(0xff102646)})
       : this._cardColor = cardColor,
@@ -97,14 +97,14 @@ class BackendWidget extends StatelessWidget {
     // Achievements
     List<Widget> achiv = [];
 
-    var max = project.achievements.length;
+    var max = project.achievements!.length;
     // bool isOverSized;
 
     // if ((isOverSized = MediaQuery.of(context).size.width < 500)) max = 1;
 
     for (int i = 0; i < max; i++) {
       achiv.add(CustomListItem(
-        title: project.achievements[i],
+        title: project.achievements![i],
         textStyle: Theme.of(context).textTheme.bodyText2,
         width: null,
         height: null,
@@ -156,7 +156,7 @@ class BackendWidget extends StatelessWidget {
         flex: 3,
       ),
       CommonUtility.simpleTextButton(
-          uri: this.project.link, text: "View on Github ->")
+          uri: this.project.link!, text: "View on Github ->")
     ];
 
     Widget out = Container(
@@ -180,11 +180,11 @@ class ReadMore extends StatelessWidget {
   final MediaQueryData mq;
 
   const ReadMore({
-    Key key,
-    @required this.mq,
-    @required this.name,
-    @required this.project,
-    @required this.techStack,
+    Key? key,
+    required this.mq,
+    required this.name,
+    required this.project,
+    required this.techStack,
   }) : super(key: key);
 
   final String name;
@@ -195,11 +195,11 @@ class ReadMore extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> achiv = [];
 
-    var max = project.achievements.length;
+    var max = project.achievements!.length;
 
     for (int i = 0; i < max; i++) {
       achiv.add(CustomListItem(
-        title: project.achievements[i],
+        title: project.achievements![i],
         textStyle: Theme.of(context).textTheme.bodyText2,
         width: null,
         height: null,
@@ -231,7 +231,7 @@ class ReadMore extends StatelessWidget {
                 shrinkWrap: true,
                 children: [
                   Text(
-                    this.project.description ?? "",
+                    this.project.description,
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ],
@@ -249,7 +249,7 @@ class ReadMore extends StatelessWidget {
               "Tech Stack:",
               textAlign: TextAlign.left,
             ),
-            Text(techStack ?? "", style: Theme.of(context).textTheme.bodyText2),
+            Text(techStack, style: Theme.of(context).textTheme.bodyText2),
             Spacer(
               flex: 1,
             )
@@ -262,11 +262,11 @@ class ReadMore extends StatelessWidget {
 
 class ReadMoreBullets extends StatelessWidget {
   const ReadMoreBullets({
-    Key key,
+    Key? key,
     this.des: "",
-    @required this.mq,
-    @required this.name,
-    @required this.project,
+    required this.mq,
+    required this.name,
+    required this.project,
   }) : super(key: key);
   final String des;
   final MediaQueryData mq;
@@ -291,7 +291,7 @@ class ReadMoreBullets extends StatelessWidget {
               height: 25,
             ),
             Column(
-              children: project.achievements
+              children: project.achievements!
                   .map((e) => CustomListItem(
                         title: e,
                         textStyle: Theme.of(context).textTheme.bodyText2,
@@ -309,13 +309,13 @@ class ReadMoreBullets extends StatelessWidget {
 
 class FrontendWidget extends StatelessWidget {
   final Project project;
-  final int priority;
+  final int? priority;
   final String name;
   final String image;
 
   FrontendWidget({
-    Key key,
-    @required this.project,
+    Key? key,
+    required this.project,
   })  : priority = project.priority,
         name = project.name,
         image = "${Access.s3}/${project.bucket}/${project.image}",
@@ -347,7 +347,7 @@ class FrontendWidget extends StatelessWidget {
         flex: 1,
       ))
       ..add(CommonUtility.simpleTextButton(
-          uri: this.project.link, text: "View on Github ->"))
+          uri: this.project.link!, text: "View on Github ->"))
       ..add(Spacer(
         flex: 1,
       ));
@@ -406,9 +406,9 @@ class FrontendWidget extends StatelessWidget {
 }
 
 class Projects extends StatefulWidget {
-  final Size size;
+  final Size? size;
 
-  const Projects({Key key, this.size}) : super(key: key);
+  const Projects({Key? key, this.size}) : super(key: key);
 
   @override
   _ProjectsState createState() => _ProjectsState();
@@ -417,9 +417,9 @@ class Projects extends StatefulWidget {
 class _ProjectsState extends State<Projects>
     with AutomaticKeepAliveClientMixin<Projects> {
   final AsyncMemoizer _memoizer = AsyncMemoizer();
-  ProjectData projects;
-  Widget fp;
-  Widget bp;
+  ProjectData? projects;
+  late Widget fp;
+  late Widget bp;
 
   bool keepAlive = true;
 
@@ -506,7 +506,7 @@ class _ProjectsState extends State<Projects>
     var size = width < 500 ? Size(40, 80) : Size(40, 50);
     // var size = Size(40, 50);
 
-    if (this.projects.backend.isNotEmpty)
+    if (this.projects!.backend!.isNotEmpty)
       children.add(GridView(
         addRepaintBoundaries: false,
         addAutomaticKeepAlives: true,
@@ -514,8 +514,8 @@ class _ProjectsState extends State<Projects>
         shrinkWrap: true,
         reverse: true,
         children: this
-            .projects
-            .backend
+            .projects!
+            .backend!
             .map((prj) => BackendWidget(
                   prj,
                   size: size,
@@ -535,7 +535,7 @@ class _ProjectsState extends State<Projects>
   }
 
   void _constructFrontend() {
-    if (this.projects.frontend.isEmpty) {
+    if (this.projects!.frontend!.isEmpty) {
       this.fp =  Container();
       return;
     }
@@ -550,7 +550,7 @@ class _ProjectsState extends State<Projects>
       ),
     ];
 
-    for (Project p in this.projects.frontend) {
+    for (Project p in this.projects!.frontend!) {
       content.add(FrontendWidget(project: p));
       content.add(SizedBox(
         width: 50,
@@ -567,7 +567,7 @@ class _ProjectsState extends State<Projects>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(ResizeObserver(updateKeepAlive));
+    WidgetsBinding.instance!.addObserver(ResizeObserver(updateKeepAlive));
     // keepAlive = true;
   }
 
@@ -585,7 +585,7 @@ class _ProjectsState extends State<Projects>
 
           // Convert Json to Object
           projects = ProjectData.fromJson(out);
-          projects.sortProjects(reverseBackend: false);
+          projects!.sortProjects(reverseBackend: false);
         } catch (e) {
           print(e.toString());
         }

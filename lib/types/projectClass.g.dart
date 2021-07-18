@@ -8,15 +8,15 @@ part of 'projectClass.dart';
 
 Project _$ProjectFromJson(Map<String, dynamic> json) {
   return Project(
-    (json['tech'] as List)?.map((e) => e as String)?.toList(),
+    (json['tech'] as List<dynamic>?)?.map((e) => e as String).toList(),
     json['name'],
     json['description'],
-    (json['achievements'] as List)?.map((e) => e as String)?.toList(),
-    json['link'] as String,
-    json['image'] as String,
-    json['priority'] as int,
-    json['bucket'] as String,
-  )..thumb = json['thumb'] as String;
+    (json['achievements'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    json['link'] as String?,
+    json['image'] as String?,
+    json['priority'] as int?,
+    json['bucket'] as String?,
+  )..thumb = json['thumb'] as String?;
 }
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{

@@ -10,7 +10,7 @@ import 'package:portfolio_site/screens/contactForum.dart';
 
 class ContactMe extends StatelessWidget {
   const ContactMe({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
