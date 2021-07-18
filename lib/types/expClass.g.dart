@@ -8,15 +8,16 @@ part of 'expClass.dart';
 
 Experience _$ExperienceFromJson(Map<String, dynamic> json) {
   return Experience(
-    json['name'] as String,
-    json['start'] as int,
-    json['end'] as int,
-    json['isCurrent'] as bool,
-    json['isUTC'] as bool,
-    json['headline'] as String,
-    json['description'] as String,
-  )..achievements =
-      (json['achievements'] as List)?.map((e) => e as String)?.toList();
+    json['name'] as String?,
+    json['start'] as int?,
+    json['end'] as int?,
+    json['isCurrent'] as bool?,
+    json['isUTC'] as bool?,
+    json['headline'] as String?,
+    json['description'] as String?,
+  )..achievements = (json['achievements'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList();
 }
 
 Map<String, dynamic> _$ExperienceToJson(Experience instance) =>

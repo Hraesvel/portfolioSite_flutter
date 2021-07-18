@@ -4,14 +4,14 @@ class CustomListItem extends StatelessWidget {
   final String title;
   final String leading;
   final double minLeadingWidth;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final Color color;
 
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   const CustomListItem(
-      {Key key,
+      {Key? key,
       this.leading: "->",
       this.title: "unknown",
       this.textStyle,
@@ -39,7 +39,7 @@ class CustomListItem extends StatelessWidget {
           style: textStyle ??
               Theme.of(context)
                   .textTheme
-                  .bodyText2
+                  .bodyText2!
                   .copyWith(fontFamily: 'RobotoMono'),
         ),
       ),

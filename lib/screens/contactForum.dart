@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:portfolio_site/utilities/common.dart';
 
 class ContactForum extends StatefulWidget {
-  const ContactForum({Key key}) : super(key: key);
+  const ContactForum({Key? key}) : super(key: key);
 
   @override
   _ContactForumState createState() => _ContactForumState();
@@ -10,7 +10,7 @@ class ContactForum extends StatefulWidget {
 
 class _ContactForumState extends State<ContactForum> {
   final _formKey = GlobalKey<FormState>();
-  final _data = Map<String, String>();
+  final _data = Map<String, String?>();
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class _ContactForumState extends State<ContactForum> {
                 ),
                 TextButton(
                   onPressed: () {
-                    final form = _formKey.currentState;
+                    final form = _formKey.currentState!;
                     if (form.validate()) {
                       form.save();
                       CommonUtility.sendContact(_data).then((resp) {

@@ -8,8 +8,8 @@ part 'expData.g.dart';
 class ExpData {
   ExpData(this.count, this.data);
 
-  int count = 0;
-  List<Experience> data = [];
+  int? count = 0;
+  List<Experience>? data = [];
 
   factory ExpData.fromJson(Map<String, dynamic> json) => _$ExpDataFromJson(json);
 

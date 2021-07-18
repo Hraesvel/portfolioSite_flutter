@@ -10,10 +10,10 @@ class AboutMe extends StatefulWidget {
   final Map info;
 
   final String templatePath;
-  final Size size;
+  final Size? size;
 
   const AboutMe(
-      {Key key, @required this.info, @required this.templatePath, this.size})
+      {Key? key, required this.info, required this.templatePath, this.size})
       : super(key: key);
 
   @override
@@ -21,9 +21,9 @@ class AboutMe extends StatefulWidget {
 }
 
 class AboutMeBuilder extends StatelessWidget {
-  final Size size;
+  final Size? size;
 
-  final String aboutMeText;
+  final String? aboutMeText;
 
   final List<String> skills = [
     "C",
@@ -34,7 +34,7 @@ class AboutMeBuilder extends StatelessWidget {
     "Flutter 🦋",
   ];
 
-  AboutMeBuilder({Key key, @required this.aboutMeText, this.size})
+  AboutMeBuilder({Key? key, required this.aboutMeText, this.size})
       : super(key: key);
 
   @override
@@ -54,7 +54,7 @@ class AboutMeBuilder extends StatelessWidget {
                   ? null
                   : (MediaQuery.of(context).size.width - 256) / 2,
               child: Scrollbar(child: SelectableText(
-                aboutMeText,
+                aboutMeText!,
                 style: Theme.of(context).textTheme.bodyText2,
                 // textAlign: TextAlign.justify,
               ),)

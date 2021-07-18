@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -49,10 +49,10 @@ class SideBar extends StatelessWidget {
   }
 
   Widget createLinkedIcon(
-      {String uri,
+      {required String uri,
       LinkTarget target: LinkTarget.blank,
-      IconData icon,
-      Color color}) {
+      IconData? icon,
+      Color? color}) {
     Link iconButton = Link(
         uri: Uri.parse(uri),
         target: target,
@@ -61,7 +61,7 @@ class SideBar extends StatelessWidget {
               icon,
               color: color ?? Colors.white.withOpacity(0.9),
             ),
-            onPressed: () => followLink()));
+            onPressed: () => followLink!()));
 
     return iconButton;
   }

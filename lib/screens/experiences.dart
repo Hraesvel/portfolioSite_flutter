@@ -17,9 +17,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../utilities/common.dart';
 
 class Experiences extends StatefulWidget {
-  final Size size;
+  final Size? size;
 
-  const Experiences({Key key, this.size}) : super(key: key);
+  const Experiences({Key? key, this.size}) : super(key: key);
 
   @override
   _ExperiencesState createState() => _ExperiencesState();
@@ -30,24 +30,24 @@ class ExperienceWidget extends StatelessWidget {
 
   final ThemeData theme;
 
-  final String headline;
-  final String description;
-  final int start;
-  final int end;
-  final bool isCurrent;
-  final List<String> _achievements;
-  final List<Widget> _children;
+  final String? headline;
+  final String? description;
+  final int? start;
+  final int? end;
+  final bool? isCurrent;
+  final List<String>? _achievements;
+  final List<Widget?>? _children;
 
   const ExperienceWidget(
-      {Key key,
-      @required this.headline,
-      @required this.start,
-      @required this.theme,
-      this.description: "",
+      {Key? key,
+      required this.headline,
+      required this.start,
+      required this.theme,
+      this.description,
       this.end: 0,
       this.isCurrent: true,
-      List<Widget> children: const <Widget>[],
-      List<String> achievements: const <String>[]})
+      List<Widget?>? children: const <Widget>[],
+      List<String>? achievements: const <String>[]})
       : this._achievements = achievements,
         this._children = children,
         super(key: key);
@@ -57,15 +57,15 @@ class ExperienceWidget extends StatelessWidget {
     // Widget hl = RichText(text: TextSpan(text: "Blank"));
     String timeline = "Month-year to Month-year";
 
-    List<Widget> children = [];
+    List<Widget?> children = [];
 
     try {
       // hl = parseDetail(headline);
       timeline =
-          "${convertTime(start)} - ${isCurrent ? "Present" : convertTime(end)}";
+          "${convertTime(start!)} - ${isCurrent! ? "Present" : convertTime(end!)}";
 
       children = [
-        parseDetail(headline),
+        parseDetail(headline!),
         SelectableText(
           timeline,
           style: theme.textTheme.headline4,
@@ -73,29 +73,27 @@ class ExperienceWidget extends StatelessWidget {
         SizedBox(
           height: 15,
         ),
-        SelectableText(description, style: theme.textTheme.bodyText2),
+        SelectableText(description!, style: theme.textTheme.bodyText2),
         SizedBox(
           height: 20,
         ),
       ];
 
-
-
-      if (this._children != null && this._children.isNotEmpty) {
-        this._children.removeWhere((element) => element == null);
-        if (this.description.isEmpty) {
+      if (this._children != null && this._children!.isNotEmpty) {
+        this._children!.removeWhere((element) => element == null);
+        if (this.description!.isEmpty) {
           // children[3] = this.child;
           children = [
             ...children.sublist(0, 3),
-            ...this._children,
+            ...this._children!,
             ...children.sublist(3)
           ];
         } else
           // children.insert(5, this.child);
-          children = [...children, ...this._children];
+          children = [...children, ...this._children!];
       }
 
-      _achievements.forEach((achievement) {
+      _achievements!.forEach((achievement) {
         children.add(Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: ListTile(
@@ -119,7 +117,7 @@ class ExperienceWidget extends StatelessWidget {
         padding: const EdgeInsets.only(top: 25, bottom: 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: children,
+          children: children as List<Widget>,
         ),
       ),
     );
@@ -133,36 +131,37 @@ class ExperienceWidget extends StatelessWidget {
 
   Widget parseDetail(String data) {
     RegExp exp2 = CommonWidgets.regex;
-    RegExpMatch matches = exp2.firstMatch(data);
+    RegExpMatch? matches = exp2.firstMatch(data);
     if (matches == null ||
         matches.groupCount == 0 ||
         matches.namedGroup("coInfo") == null)
       return RichText(
           text: TextSpan(text: data, style: this.theme.textTheme.headline3));
 
-    Map<String, String> map = {};
+    Map<String, String?> map = {};
 
     for (String n in matches.groupNames) map[n] = matches.namedGroup(n);
 
     var tap = TapGestureRecognizer();
-    tap.onTap = () => launch(map['url']);
+    tap.onTap = () => launch(map['url']!);
 
     return SelectableText.rich(TextSpan(children: <TextSpan>[
       TextSpan(text: map["leading"], style: theme.textTheme.headline3),
       TextSpan(
           text: map['name'],
-          style: theme.textTheme.headline3.copyWith(
+          style: theme.textTheme.headline3!.copyWith(
               color: theme.colorScheme.secondary,
               decoration: TextDecoration.underline),
           recognizer: tap),
-      map.containsKey('tail')
-          ? TextSpan(text: map["tail"], style: theme.textTheme.headline3)
-          : null,
+      if (map.containsKey('tail'))
+        TextSpan(text: map["tail"], style: theme.textTheme.headline3)
+      else
+        TextSpan(text: "", style: theme.textTheme.headline3),
     ]));
   }
 
   static Widget fromData(Experience data, BuildContext context,
-      {List<Widget> children}) {
+      {List<Widget?>? children}) {
     return ExperienceWidget(
         headline: data.headline,
         start: data.start,
@@ -178,23 +177,23 @@ class ExperienceWidget extends StatelessWidget {
 class ExpTextButton extends StatelessWidget {
   final int idx;
   final Experience experience;
-  final _ExperiencesState _parent;
+  final _ExperiencesState? _parent;
 
   ExpTextButton({
-    Key key,
-    @required this.idx,
-    @required this.experience,
+    Key? key,
+    required this.idx,
+    required this.experience,
     parent,
   }) : this._parent = parent;
 
   @override
   Widget build(BuildContext context) {
-    Widget resume, artPortfolio;
+    Widget? resume, artPortfolio;
     if (this.experience.name == "CG Generalist") {
-
       String resLink = WebAssets.cgResume;
-      if(!kIsWeb)
-        resLink =  "https://msmith.online/assets/static/Martin_CG_Generalist.pdf";
+      if (!kIsWeb)
+        resLink =
+            "https://msmith.online/assets/static/Martin_CG_Generalist.pdf";
 
       resume = TextButton(
           onPressed: () => launch(Uri.parse(resLink).toString()),
@@ -212,20 +211,20 @@ class ExpTextButton extends StatelessWidget {
       child: TextButton(
           onPressed: () {
             // ignore: invalid_use_of_protected_member
-            _parent.setState(() {
-              if (this.idx == _parent._displayedIdx) return;
-              _parent.currentExp = ExperienceWidget.fromData(
-                  experience, context,
-                  children: [resume, artPortfolio]);
-              _parent._displayedIdx = this.idx;
+            _parent!.setState(() {
+              if (this.idx == _parent!._displayedIdx) return;
+              _parent!.currentExp = ExperienceWidget.fromData(
+                      experience, context, children: [resume, artPortfolio])
+                  as ExperienceWidget;
+              _parent!._displayedIdx = this.idx;
             });
           },
           child: Align(
               alignment: Alignment.bottomCenter,
               child: Text(
-                experience.name,
-                style: this.idx == _parent._displayedIdx
-                    ? Theme.of(context).textTheme.button.copyWith(
+                experience.name!,
+                style: this.idx == _parent!._displayedIdx
+                    ? Theme.of(context).textTheme.button!.copyWith(
                           fontSize: 20,
                           decoration: TextDecoration.underline,
                           decorationThickness: 2,
@@ -240,7 +239,7 @@ class ExpTextButton extends StatelessWidget {
 class _ExperiencesState extends State<Experiences>
     with AutomaticKeepAliveClientMixin {
   final AsyncMemoizer _memoizer = AsyncMemoizer();
-  ExpData expData;
+  ExpData? expData;
   ExperienceWidget currentExp = ExperienceWidget(
     headline: "PlaceHolder",
     start: 0,
@@ -290,10 +289,10 @@ class _ExperiencesState extends State<Experiences>
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: List<Widget>.generate(
-                    expData.count,
+                    expData!.count!,
                     (index) => ExpTextButton(
                       idx: index,
-                      experience: this.expData.data[index],
+                      experience: this.expData!.data![index],
                       parent: this,
                     ),
                   ),
@@ -330,7 +329,7 @@ class _ExperiencesState extends State<Experiences>
   }
 
   Future<ExpData> parseExp(String filename, {String setLast = ""}) async {
-    Map<String, dynamic> out;
+    Map<String, dynamic>? out;
     String json = "";
 
     if (kReleaseMode) {
@@ -342,11 +341,12 @@ class _ExperiencesState extends State<Experiences>
       json = await CommonUtility.loadStringAsset("assets/$filename");
 
     out = JsonDecoder().convert(json);
-    ExpData exp = ExpData.fromJson(out);
+    ExpData exp = ExpData.fromJson(out!);
     if (setLast.isNotEmpty) {
-      int i = exp.data?.indexWhere((element) => element.name.contains(setLast));
-      exp.data?.add(exp.data[i]);
-      exp.data?.removeAt(i);
+      int? i =
+          exp.data?.indexWhere((element) => element.name!.contains(setLast));
+      exp.data?.add(exp.data![i!]);
+      exp.data?.removeAt(i!);
     }
     return exp;
   }
@@ -359,7 +359,8 @@ class _ExperiencesState extends State<Experiences>
       this.expData =
           await parseExp('experiences.json', setLast: "CG Generalist");
       // create an Experience Widget from the first member of the array.
-      currentExp = ExperienceWidget.fromData(expData.data[0], context);
+      currentExp = ExperienceWidget.fromData(expData!.data![0], context)
+          as ExperienceWidget;
       return this.expData;
     });
   }

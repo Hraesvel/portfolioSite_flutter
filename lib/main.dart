@@ -21,7 +21,7 @@ void main() {
             data: MediaQuery.of(context).size.width < 900
                 ? MediaQuery.of(context).copyWith(textScaleFactor: .85)
                 : MediaQuery.of(context),
-            child: child);
+            child: child!);
       },
       title: "Martin's Portfolio",
       home: Home(),
@@ -31,12 +31,12 @@ void main() {
 }
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final List<Widget> actions;
+  final List<Widget>? actions;
 
   @override
   final Size preferredSize;
 
-  CustomAppBar({Key key, this.actions})
+  CustomAppBar({Key? key, this.actions})
       : preferredSize = Size.fromHeight(128),
         super(key: key);
 
@@ -61,7 +61,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 15,
                 crossAxisAlignment: WrapCrossAlignment.start,
-                children: actions,
+                children: actions!,
               ),
       ),
     ));
@@ -70,7 +70,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 class Footer extends StatelessWidget {
   const Footer({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -123,15 +123,15 @@ class _HomeState extends State<Home> {
   //Todo: convert Map to json file or move this to a global file for easier editing.
   final Map<String, String> info = {"resident": "San Francisco, CA"};
 
-  AutoScrollController controller;
+  AutoScrollController? controller;
   final Axis scrollDirection = Axis.vertical;
   final Duration scrollDuration = Duration(milliseconds: 1600);
 
 
-  List<Widget> _actionButtons;
-  List<Widget> _pages;
+  List<Widget>? _actionButtons;
+  List<Widget>? _pages;
 
-  List<Widget> _listOfPages;
+  List<Widget>? _listOfPages;
 
   var _listView;
 
@@ -149,7 +149,7 @@ class _HomeState extends State<Home> {
         decoration: BoxDecoration(color: Theme.of(context).accentColor),
       )
     ];
-    drawer.addAll(_actionButtons);
+    drawer.addAll(_actionButtons!);
 
     return Scaffold(
       appBar: CustomAppBar(actions: _actionButtons),
@@ -172,7 +172,7 @@ class _HomeState extends State<Home> {
                 padding: CommonWidgets.defaultEdgeInset(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _listOfPages,
+                  children: _listOfPages!,
                 ),
               ),
               controller: controller,
@@ -214,15 +214,15 @@ class _HomeState extends State<Home> {
       ContactMe(),
     ];
 
-    _listOfPages ??= _pages
+    _listOfPages ??= _pages!
         .asMap()
         .entries
         .map((e) => AutoScrollTag(
 
             key: ValueKey(e.key),
-            controller: controller,
+            controller: controller!,
             index: e.key,
-            child: !(e.key < _pages.length)
+            child: !(e.key < _pages!.length)
                 ? e.value
                 : Padding(
                     padding: EdgeInsets.only(
@@ -259,7 +259,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _textActionButton(Future<void> Function() fn,
-      {text: "blank", TextStyle style}) {
+      {text: "blank", TextStyle? style}) {
     return TextButton(
       onPressed: () async => fn(),
       child: Padding(
@@ -275,6 +275,6 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _scrollToIndex(int index) async {
-    await controller.scrollToIndex(index, duration: scrollDuration);
+    await controller!.scrollToIndex(index, duration: scrollDuration);
   }
 }
