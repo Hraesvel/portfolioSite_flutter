@@ -4,8 +4,6 @@ import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:portfolio_site/app_level/assets/assets.dart';
@@ -54,13 +52,14 @@ class ExperienceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// This Constructs the Cards for an experience/job
     // Widget hl = RichText(text: TextSpan(text: "Blank"));
     String timeline = "Month-year to Month-year";
 
     List<Widget?> children = [];
 
     try {
-      // hl = parseDetail(headline);
+      // build timestamp
       timeline =
           "${convertTime(start!)} - ${isCurrent! ? "Present" : convertTime(end!)}";
 
@@ -111,13 +110,15 @@ class ExperienceWidget extends StatelessWidget {
       debugPrint(e.toString());
     }
 
+    List<Widget> c = children.map((e) => e as Widget).toList();
+
     return Container(
       height: 500,
       child: Padding(
         padding: const EdgeInsets.only(top: 25, bottom: 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: children as List<Widget>,
+          children: c,
         ),
       ),
     );

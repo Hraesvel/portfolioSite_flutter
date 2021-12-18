@@ -25,10 +25,10 @@ class Project {
 
   @JsonKey(name: 'tech')
   List<String>? _tech = [];
-  @JsonKey(nullable: true)
+  @JsonKey()
   String? image;
 
-  @JsonKey(nullable: true)
+  @JsonKey()
   String? thumb;
   String? bucket;
 

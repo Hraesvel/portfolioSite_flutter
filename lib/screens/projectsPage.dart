@@ -1,19 +1,13 @@
 import 'dart:convert';
 
 import 'package:async/async.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:portfolio_site/app_level/access/access.dart';
 import 'package:portfolio_site/types/types.dart';
 import 'package:portfolio_site/utilities/common.dart';
 import 'package:portfolio_site/utilities/customListItem.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_layout_grid/flutter_layout_grid.dart';
-
-import 'about_me_builder_row.dart';
 import 'package:portfolio_site/main.dart';
 
 class BackendWidget extends StatelessWidget {
@@ -47,7 +41,7 @@ class BackendWidget extends StatelessWidget {
       techStack: tech,
     );
 
-    Widget techStack = SelectableText(tech.substring(1, tech.length - 1));
+    // Widget techStack = SelectableText(tech.substring(1, tech.length - 1));
 
     TapGestureRecognizer tap = TapGestureRecognizer();
     tap.onTap = () {
@@ -428,10 +422,6 @@ class _ProjectsState extends State<Projects>
 
   @override
   void updateKeepAlive() => setState(() => keepAlive = !keepAlive);
-
-  void _rebuildGrid() {
-    print("hello");
-  }
 
   @override
   Widget build(BuildContext context) {

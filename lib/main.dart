@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio_site/side_bar.dart';
 import 'package:portfolio_site/utilities/common.dart';
@@ -132,8 +130,6 @@ class _HomeState extends State<Home> {
   List<Widget>? _pages;
 
   List<Widget>? _listOfPages;
-
-  var _listView;
 
   @override
   Widget build(BuildContext context) {
